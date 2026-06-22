@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import Reveal from "./components/Reveal";
 import { SITE, tools, type Tool } from "./lib/data";
@@ -12,22 +13,45 @@ const categoryColors: Record<Tool["category"], string> = {
 function ToolCard({ tool, delay }: { tool: Tool; delay: number }) {
   return (
     <Reveal direction="scale" delay={delay}>
-      <div className="group relative h-40 rounded-xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/10">
-        {/* Front: name + category */}
-        <div className="flex h-full flex-col justify-between transition-opacity duration-300 group-hover:opacity-0">
-          <span
-            className={`inline-flex w-fit rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ${categoryColors[tool.category]}`}
-          >
-            {tool.category}
-          </span>
-          <h3 className="text-lg font-semibold leading-snug">{tool.name}</h3>
-        </div>
+      {/* Gradient border + glow wrapper */}
+      <div className="group rounded-2xl bg-gradient-to-br from-violet-500 via-indigo-500 to-cyan-400 p-[1.5px] shadow-[0_0_25px_-8px_rgba(124,58,237,0.55)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_32px_-4px_rgba(34,211,238,0.6)]">
+        <div className="relative h-44 overflow-hidden rounded-2xl bg-card p-5">
+          {/* Front: logo + category + name */}
+          <div className="flex h-full flex-col justify-between transition-opacity duration-300 group-hover:opacity-0">
+            <div className="flex items-center gap-3">
+              <span
+                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full shadow-md ${
+                  tool.name === "Vercel" ? "bg-black" : "bg-white"
+                }`}
+              >
+                <Image
+                  src={tool.logo}
+                  alt={`${tool.name} logo`}
+                  width={36}
+                  height={36}
+                  className={`object-contain ${
+                    tool.name === "Python" || tool.name === "Docker"
+                      ? "h-9 w-9"
+                      : "h-7 w-7"
+                  }`}
+                  unoptimized
+                />
+              </span>
+              <span
+                className={`inline-flex w-fit rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ${categoryColors[tool.category]}`}
+              >
+                {tool.category}
+              </span>
+            </div>
+            <h3 className="text-lg font-semibold leading-snug">{tool.name}</h3>
+          </div>
 
-        {/* Back: description (revealed on hover/focus) */}
-        <div className="pointer-events-none absolute inset-0 flex items-center rounded-xl bg-card/95 p-5 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
-          <p className="text-sm leading-relaxed text-muted">
-            {tool.description}
-          </p>
+          {/* Back: description (revealed on hover/focus) */}
+          <div className="pointer-events-none absolute inset-0 flex items-center rounded-2xl bg-card/95 p-5 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
+            <p className="text-sm leading-relaxed text-muted">
+              {tool.description}
+            </p>
+          </div>
         </div>
       </div>
     </Reveal>
@@ -48,7 +72,7 @@ export default function Home() {
             className="animate-fade-up mt-4 text-4xl font-bold leading-tight tracking-tight sm:text-6xl"
             style={{ animationDelay: "80ms" }}
           >
-            Hi, I&apos;m <span className="text-gradient">{SITE.name}</span>.
+            Hello, I&apos;m <span className="text-gradient">{SITE.name}</span>.
             <br />I build things for the web — front to back.
           </h1>
           <p

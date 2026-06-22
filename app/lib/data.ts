@@ -11,6 +11,8 @@ export type Tool = {
   name: string;
   category: "Language" | "Framework" | "Tool" | "Platform";
   description: string;
+  /** Path to the brand logo (in /public/logos). */
+  logo: string;
 };
 
 export const tools: Tool[] = [
@@ -19,72 +21,84 @@ export const tools: Tool[] = [
     category: "Language",
     description:
       "The core trio of the web: HTML structures content, CSS styles and lays it out, and JavaScript adds interactivity in the browser.",
+    logo: "/logos/html5.svg",
   },
   {
     name: "C",
     category: "Language",
     description:
       "A low-level, compiled systems language. Great for understanding memory, performance, and how software works close to the hardware.",
+    logo: "/logos/c.svg",
   },
   {
     name: "Python",
     category: "Language",
     description:
       "A versatile, readable language used here for backend services, scripting, data ingestion, and AI/ML work.",
+    logo: "/logos/python.svg",
   },
   {
     name: "React/Next.js",
     category: "Framework",
     description:
       "React is a component-based UI library; Next.js is the full-stack React framework adding routing, server rendering, and APIs.",
+    logo: "/logos/react.svg",
   },
   {
     name: "FastAPI",
     category: "Framework",
     description:
       "A modern, high-performance Python web framework for building asynchronous REST APIs with automatic validation and docs.",
+    logo: "/logos/fastapi.svg",
   },
   {
     name: "Vite/React Router",
     category: "Framework",
     description:
       "Vite is a fast build tool and dev server; React Router handles client-side navigation for single-page React applications.",
+    logo: "/logos/vite.svg",
   },
   {
     name: "Claude Code",
     category: "Tool",
     description:
       "Anthropic's agentic coding tool that runs in the terminal to help plan, write, and refactor code across a codebase.",
+    logo: "/logos/claude.svg",
   },
   {
     name: "Docker",
     category: "Tool",
     description:
       "Containerization platform that packages applications and their dependencies so they run consistently across environments.",
+    logo: "/logos/docker.svg",
   },
   {
     name: "GitHub Desktop / Git",
     category: "Tool",
     description:
       "Git is the distributed version-control system for tracking changes; GitHub Desktop provides a visual interface for it.",
+    logo: "/logos/git.svg",
   },
   {
     name: "Supabase",
     category: "Platform",
     description:
       "An open-source Firebase alternative providing a Postgres database, authentication, storage, and instant APIs.",
+    logo: "/logos/supabase.svg",
   },
   {
     name: "Render",
     category: "Platform",
     description:
       "A cloud platform for deploying and hosting web services, APIs, and background workers with managed infrastructure.",
+    logo: "/logos/render.svg",
   },
   {
     name: "Vercel",
     category: "Platform",
     description:
       "The deployment platform built by the creators of Next.js, offering fast global hosting and CI/CD for frontend apps.",
+    logo: "/logos/vercel.svg",
   },
 ];
 
@@ -93,6 +107,8 @@ export type Project = {
   org: string;
   description: string;
   stack: string[];
+  /** Optional screenshot/preview image (in /public/projects). Falls back to a placeholder. */
+  image?: string;
 };
 
 export const projects: Project[] = [

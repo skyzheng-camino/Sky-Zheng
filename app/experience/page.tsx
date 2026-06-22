@@ -30,7 +30,8 @@ export default function ExperiencePage() {
               {/* Timeline node */}
               <span className="absolute -left-[7px] mt-1.5 h-3.5 w-3.5 rounded-full border-2 border-accent bg-background" />
 
-              <div className="rounded-2xl border border-border bg-card p-6 transition-colors hover:border-accent/40">
+              <div className="group rounded-2xl bg-gradient-to-br from-violet-500 via-indigo-500 to-cyan-400 p-[1.5px] shadow-[0_0_25px_-8px_rgba(124,58,237,0.55)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_32px_-4px_rgba(34,211,238,0.6)]">
+                <div className="rounded-2xl bg-card p-6">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <h2 className="text-lg font-semibold tracking-tight">
                     {exp.title}
@@ -53,6 +54,7 @@ export default function ExperiencePage() {
                     </li>
                   ))}
                 </ul>
+                </div>
               </div>
             </Reveal>
           ))}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PageHeader from "../components/PageHeader";
+import PhoneField from "../components/PhoneField";
 import Reveal from "../components/Reveal";
 import { SITE } from "../lib/data";
 
@@ -26,7 +27,7 @@ export default function ContactPage() {
       <PageHeader
         eyebrow="Say hello"
         title="Contact"
-        subtitle="Have a project, role, or question in mind? Send a message and I'll get back to you."
+        subtitle="Want to get to know me? Send a message and I'll get back to you."
       />
 
       <section className="mx-auto max-w-2xl px-6 py-16">
@@ -93,13 +94,7 @@ export default function ContactPage() {
               >
                 Phone <span className="text-muted">(optional)</span>
               </label>
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                placeholder="(optional)"
-                className={inputClasses}
-              />
+              <PhoneField className={inputClasses} />
             </div>
 
             <div>

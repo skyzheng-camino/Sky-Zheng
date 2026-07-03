@@ -26,38 +26,40 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-40 border-b transition-colors duration-300 ${
+      className={`sticky top-0 z-40 border-b transition-all duration-300 ${
         scrolled
-          ? "border-border bg-background/80 backdrop-blur-md"
+          ? "border-border bg-background/80 shadow-lg shadow-black/20 backdrop-blur-md"
           : "border-transparent bg-transparent"
       }`}
     >
-      <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+      <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
         <Link
           href="/"
-          className="text-lg font-semibold tracking-tight transition-opacity hover:opacity-80"
+          className="animate-fade-down bg-gradient-to-br from-cyan-300 via-sky-400 to-indigo-500 bg-clip-text drop-shadow-[0_0_10px_rgba(34,211,238,0.45)] text-lg font-semibold tracking-tight text-transparent transition-opacity hover:opacity-80"
         >
           {SITE.name}
         </Link>
 
         <ul className="hidden items-center gap-1 sm:flex">
-          {links.map((link) => {
+          {links.map((link, i) => {
             const active =
               link.href === "/"
                 ? pathname === "/"
                 : pathname.startsWith(link.href);
             return (
-              <li key={link.href}>
+              <li
+                key={link.href}
+                className="animate-fade-down"
+                style={{ animationDelay: `${120 + i * 90}ms` }}
+              >
                 <Link
                   href={link.href}
-                  className={`relative rounded-full px-4 py-2 text-sm transition-colors ${
-                    active
-                      ? "text-foreground"
-                      : "text-muted hover:text-foreground"
+                  className={`relative rounded-full bg-gradient-to-br from-cyan-300 via-sky-400 to-indigo-500 bg-clip-text drop-shadow-[0_0_10px_rgba(34,211,238,0.45)] px-4 py-2 text-sm font-medium text-transparent transition-opacity ${
+                    active ? "opacity-100" : "opacity-70 hover:opacity-100"
                   }`}
                 >
                   {active && (
-                    <span className="absolute inset-0 -z-10 rounded-full bg-accent/15 ring-1 ring-accent/30" />
+                    <span className="absolute inset-0 -z-10 rounded-full bg-accent/10 ring-1 ring-accent/30" />
                   )}
                   {link.label}
                 </Link>
@@ -91,10 +93,10 @@ export default function Navbar() {
                 <Link
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className={`block rounded-md px-3 py-2 text-sm transition-colors ${
+                  className={`block rounded-md bg-gradient-to-br from-cyan-300 via-sky-400 to-indigo-500 bg-clip-text drop-shadow-[0_0_10px_rgba(34,211,238,0.45)] px-3 py-2 text-sm font-medium text-transparent transition-opacity ${
                     active
-                      ? "bg-accent/15 text-foreground"
-                      : "text-muted hover:text-foreground"
+                      ? "rounded-md ring-1 ring-accent/30 opacity-100"
+                      : "opacity-70 hover:opacity-100"
                   }`}
                 >
                   {link.label}

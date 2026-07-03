@@ -62,31 +62,38 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden">
+      <section className="relative -mt-16 flex min-h-[100svh] items-center overflow-hidden">
         <div className="glow pointer-events-none absolute inset-0 -z-10" />
-        <div className="mx-auto max-w-5xl px-6 py-28 sm:py-36">
-          <p className="animate-fade-up text-sm font-medium uppercase tracking-[0.2em] text-accent-2">
-            {SITE.role}
-          </p>
-          <h1
-            className="animate-fade-up mt-4 text-4xl font-bold leading-tight tracking-tight sm:text-6xl"
-            style={{ animationDelay: "80ms" }}
-          >
-            <span className="text-gradient">{SITE.name}</span>
-            
-          </h1>
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-6 sm:flex-row sm:justify-center sm:gap-8">
           <p
-            className="animate-fade-up mt-6 max-w-2xl text-lg leading-relaxed text-muted"
+            className="animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2/70 sm:text-right sm:text-3xl"
             style={{ animationDelay: "160ms" }}
           >
+            Full-Stack
+          </p>
+          <h1 className="animate-fade-up text-center text-5xl font-bold leading-tight tracking-tight sm:text-7xl md:text-8xl">
+            <span className="text-gradient opacity-80">{SITE.name}</span>
+          </h1>
+          <p
+            className="animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2/70 sm:text-3xl"
+            style={{ animationDelay: "160ms" }}
+          >
+            Developer
+          </p>
+        </div>
+      </section>
+
+      {/* Intro (below the fold) */}
+      <section className="mx-auto max-w-5xl px-6 py-28">
+        <Reveal>
+          <p className="max-w-2xl text-lg leading-relaxed text-muted">
             A full-stack developer who ships industry-grade software from
             asynchronous data-ingestion pipelines and REST APIs to authenticated
             web apps and responsive marketing sites.
           </p>
-          <div
-            className="animate-fade-up mt-10 flex flex-wrap gap-4"
-            style={{ animationDelay: "240ms" }}
-          >
+        </Reveal>
+        <Reveal delay={80}>
+          <div className="mt-10 flex flex-wrap gap-4">
             <Link
               href="/projects"
               className="rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-transform hover:scale-105"
@@ -100,7 +107,7 @@ export default function Home() {
               Get in touch
             </Link>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* Tools section */}

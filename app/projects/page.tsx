@@ -37,7 +37,7 @@ export default function ProjectsPage() {
       <PageHeader
         eyebrow="Portfolio"
         title="Projects"
-        subtitle="Software I've designed, built, and shipped — backends, web apps, and marketing sites."
+        subtitle="Software I've designed, built, and shipped: backends, web apps, and marketing sites."
       />
 
       <section className="mx-auto max-w-5xl px-6 py-16">

@@ -72,14 +72,14 @@ export default function Home() {
             className="animate-fade-up mt-4 text-4xl font-bold leading-tight tracking-tight sm:text-6xl"
             style={{ animationDelay: "80ms" }}
           >
-            Hello, I&apos;m <span className="text-gradient">{SITE.name}</span>.
-            <br />I build things for the web — front to back.
+            <span className="text-gradient">{SITE.name}</span>
+            
           </h1>
           <p
             className="animate-fade-up mt-6 max-w-2xl text-lg leading-relaxed text-muted"
             style={{ animationDelay: "160ms" }}
           >
-            A full-stack developer who ships industry-grade software — from
+            A full-stack developer who ships industry-grade software from
             asynchronous data-ingestion pipelines and REST APIs to authenticated
             web apps and responsive marketing sites.
           </p>

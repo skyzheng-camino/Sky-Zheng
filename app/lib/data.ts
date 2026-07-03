@@ -145,7 +145,7 @@ export type Experience = {
 export const experiences: Experience[] = [
   {
     title: "Camino KC Internship",
-    org: "Keystone CoLAB — Kansas City, MO",
+    org: "Keystone CoLAB, Kansas City, MO",
     period: "May 2026 – Present",
     points: [
       "Worked as a full-stack developer with another intern to deliver industry-grade software for local KC corporations.",
@@ -154,8 +154,16 @@ export const experiences: Experience[] = [
     ],
   },
   {
+    title: "Sage AI Beta Tester",
+    org: "University of Missouri (Columbia)",
+    period: "June 2026 – Aug. 2026",
+    points: [
+      "Helped test and provide beneficial UI and software feedback on an AI tutor application developed by a research and development team led by Dr. Nilesh Salvi.",
+    ],
+  },
+  {
     title: "U.S. Department of Education APEX Program",
-    org: "AI Prepared Experimental Micro-Credential — U.S. Dept. of Education & dSAIC",
+    org: "AI Prepared Experimental Micro-Credential, U.S. Dept. of Education & dSAIC",
     period: "Feb. 2026 – May 2026",
     points: [
       "Completed the APEX (AI Prepared Experimental) micro-credential.",
@@ -164,7 +172,7 @@ export const experiences: Experience[] = [
   },
   {
     title: "Web Development PLA",
-    org: "University of Missouri — Columbia",
+    org: "University of Missouri (Columbia)",
     period: "Jan. 2026 – May 2026",
     points: [
       "Helped students during office hours with web-development projects and homework, drawing on my expertise in web development and software engineering.",
@@ -173,15 +181,15 @@ export const experiences: Experience[] = [
   },
   {
     title: "Undergraduate Research with Dr. Ekincan Ufuktepe",
-    org: "University of Missouri — Columbia",
+    org: "University of Missouri (Columbia)",
     period: "Fall 2026 (Upcoming)",
     points: [
       "Conducting research on AI and software-integration performance and measuring the value of software.",
     ],
   },
   {
-    title: "MUVR — Mizzou VR Hackathon",
-    org: "TigerHacks, University of Missouri",
+    title: "MUVR: Mizzou VR Hackathon",
+    org: "TigerHacks, University of Missouri (Columbia)",
     period: "Spring 2025",
     points: [
       "Participated in TigerHacks, Mizzou's largest student-run hackathon, which featured XR technology and Unity for game creation.",

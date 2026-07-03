@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: `${SITE.name} — ${SITE.role}`,
-    template: `%s — ${SITE.name}`,
+    default: `${SITE.name} | ${SITE.role}`,
+    template: `%s | ${SITE.name}`,
   },
   description: `Portfolio of ${SITE.name}, a ${SITE.role.toLowerCase()} building web apps, APIs, and data pipelines.`,
 };

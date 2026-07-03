@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import PandaParticles from "./components/PandaParticles";
 import Reveal from "./components/Reveal";
 import { SITE, tools, type Tool } from "./lib/data";
 
@@ -83,31 +84,37 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Intro (below the fold) */}
-      <section className="mx-auto max-w-5xl px-6 py-28">
-        <Reveal>
-          <p className="max-w-2xl text-lg leading-relaxed text-muted">
-            A full-stack developer who ships industry-grade software from
-            asynchronous data-ingestion pipelines and REST APIs to authenticated
-            web apps and responsive marketing sites.
-          </p>
-        </Reveal>
-        <Reveal delay={80}>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <Link
-              href="/projects"
-              className="rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-transform hover:scale-105"
-            >
-              View my work
-            </Link>
-            <Link
-              href="/contact"
-              className="rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors hover:border-accent/60 hover:bg-accent/10"
-            >
-              Get in touch
-            </Link>
-          </div>
-        </Reveal>
+      {/* Intro (below the fold): full-width panda with overlaid copy */}
+      <section className="relative w-full overflow-hidden">
+        <PandaParticles />
+        {/* Overlay sits on the right; pointer-events pass through to the
+            canvas except on the buttons themselves. */}
+        <div className="pointer-events-none px-6 pb-16 sm:absolute sm:inset-y-0 sm:right-8 sm:flex sm:w-[36%] sm:flex-col sm:justify-center sm:p-0 lg:right-16">
+          <Reveal>
+            <p className="text-lg leading-relaxed text-muted">
+              A full-stack developer who ships industry-grade UI animations and 
+              complex software from asynchronous data-ingestion pipelines and 
+              REST APIs to authenticated web apps and responsive marketing 
+              sites. Also, a lifelong learner who loves to explore new software.
+            </p>
+          </Reveal>
+          <Reveal delay={80}>
+            <div className="pointer-events-auto mt-10 flex flex-wrap gap-4">
+              <Link
+                href="/projects"
+                className="rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-transform hover:scale-105"
+              >
+                View my work
+              </Link>
+              <Link
+                href="/contact"
+                className="rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors hover:border-accent/60 hover:bg-accent/10"
+              >
+                Get in touch
+              </Link>
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* Tools section */}

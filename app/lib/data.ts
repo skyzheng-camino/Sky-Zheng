@@ -109,15 +109,28 @@ export type Project = {
   stack: string[];
   /** Optional screenshot/preview image (in /public/projects). Falls back to a placeholder. */
   image?: string;
+  /** Optional link to the live site. Makes the title and image clickable. */
+  link?: string;
 };
 
 export const projects: Project[] = [
+  {
+    title: "Camino Website",
+    org: "Camino",
+    description:
+      "Built the company website for Camino, a Kansas City software consulting firm that partners with visionary teams to build agentic AI solutions and digital products. The site showcases the firm's UI design, software engineering, and strategy services with a distinctive rose-trail visual identity, custom typography, and smooth animations, deployed on Vercel.",
+    stack: ["Next.js", "React", "CSS", "Vercel"],
+    image: "/projects/camino.jpg",
+    link: "https://www.caminokc.com/",
+  },
   {
     title: "Data-Ingestion Backend",
     org: "SC Analytics Zones",
     description:
       "Architected an asynchronous data-ingestion REST API that cleans and transforms data files for Supabase to store, while tracking the development process using Render and Docker.",
     stack: ["FastAPI", "Python", "Supabase", "Docker", "Render"],
+    image: "/projects/sc-analytics-zones.jpg",
+    link: "https://www.scanalyticszones.app/",
   },
   {
     title: "Client Web App",
@@ -125,6 +138,8 @@ export const projects: Project[] = [
     description:
       "Developed a bundled application consisting of Vite and React Router with Supabase for authentication and data to implement role-based access (admin vs. client), deployed via Vercel.",
     stack: ["Vite", "React Router", "Supabase", "Vercel"],
+    image: "/projects/sc-analytics-zones.jpg",
+    link: "https://www.scanalyticszones.app/",
   },
   {
     title: "Jaeli Construction Landing Page",
@@ -132,6 +147,8 @@ export const projects: Project[] = [
     description:
       "Designed and built a responsive marketing website utilizing Next.js and TypeScript, styled with Tailwind CSS for the UI, and Supabase for collecting customer reviews.",
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase"],
+    image: "/projects/jaeli-construction.jpg",
+    link: "https://www.jaeliconstruction.com/",
   },
 ];
 

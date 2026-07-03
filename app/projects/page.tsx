@@ -51,13 +51,30 @@ export default function ProjectsPage() {
                   {/* Image side */}
                   <div className={imageFirst ? "md:order-2" : ""}>
                     {project.image ? (
-                      <Image
-                        src={project.image}
-                        alt={`${project.title} preview`}
-                        width={800}
-                        height={600}
-                        className="aspect-[4/3] w-full rounded-xl object-cover"
-                      />
+                      project.link ? (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`Visit the ${project.title} live site`}
+                        >
+                          <Image
+                            src={project.image}
+                            alt={`${project.title} preview`}
+                            width={800}
+                            height={600}
+                            className="aspect-[4/3] w-full rounded-xl object-cover transition-opacity hover:opacity-90"
+                          />
+                        </a>
+                      ) : (
+                        <Image
+                          src={project.image}
+                          alt={`${project.title} preview`}
+                          width={800}
+                          height={600}
+                          className="aspect-[4/3] w-full rounded-xl object-cover"
+                        />
+                      )
                     ) : (
                       <ImagePlaceholder />
                     )}
@@ -70,7 +87,18 @@ export default function ProjectsPage() {
                     </p>
                     <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2">
                       <h2 className="text-xl font-semibold tracking-tight">
-                        {project.title}
+                        {project.link ? (
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition-colors hover:text-accent-2"
+                          >
+                            {project.title}
+                          </a>
+                        ) : (
+                          project.title
+                        )}
                       </h2>
                       <span className="text-sm font-medium text-accent-2">
                         {project.org}

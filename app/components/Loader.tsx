@@ -114,7 +114,7 @@ export default function Loader() {
               cx="48%"
               cy="53%"
               r="1.5%"
-              fill="#000000"
+              fill="#000"
             />
             <text
               className="loader-mark"

@@ -48,7 +48,7 @@ export default function RootLayout({
             Skipped for reduced-motion users. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("is-loading")}}catch(e){}`,
+            __html: `try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("is-loading","is-nav-loading")}}catch(e){}`,
           }}
         />
         <Loader />

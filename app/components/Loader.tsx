@@ -10,7 +10,9 @@ import gsap from "gsap";
  * whole screen zooms through the "S" cutout to reveal the homepage.
  * Page entrance animations are held paused via the `is-loading` class
  * on <html> (added by an inline script in layout.tsx before first
- * paint) and released just as the zoom starts.
+ * paint) and released just as the zoom starts. The navbar is held by
+ * the separate `is-nav-loading` class and released a beat after the
+ * overlay has fully faded out, so it slides in after the intro.
  */
 export default function Loader() {
   const ref = useRef<HTMLDivElement>(null);
@@ -19,6 +21,7 @@ export default function Loader() {
   useEffect(() => {
     const root = document.documentElement;
     if (!root.classList.contains("is-loading")) {
+      root.classList.remove("is-nav-loading");
       setDone(true);
       return;
     }
@@ -30,14 +33,19 @@ export default function Loader() {
     const release = () => {
       root.classList.remove("is-loading");
     };
+    const releaseNav = () => {
+      root.classList.remove("is-nav-loading");
+    };
     // Safety net: never trap the page if the timeline fails.
     const failsafe = window.setTimeout(() => {
       release();
+      releaseNav();
       setDone(true);
     }, 6000);
 
     let ctx: gsap.Context | undefined;
     let cancelled = false;
+    let navTimer: number | undefined;
 
     // Wait for the webfont: <text> inside a mask rasterized with the
     // fallback font doesn't reliably repaint when Geist arrives, which
@@ -50,6 +58,8 @@ export default function Loader() {
           onComplete: () => {
             window.clearTimeout(failsafe);
             setDone(true);
+            // Beat after the overlay is gone, then start the navbar.
+            releaseNav();
           },
         });
 
@@ -83,6 +93,7 @@ export default function Loader() {
     return () => {
       cancelled = true;
       window.clearTimeout(failsafe);
+      window.clearTimeout(navTimer);
       ctx?.revert();
     };
   }, []);
@@ -114,7 +125,7 @@ export default function Loader() {
               cx="48%"
               cy="53%"
               r="1.5%"
-              fill="#000"
+              fill="#000/"
             />
             <text
               className="loader-mark"

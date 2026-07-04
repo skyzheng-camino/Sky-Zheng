@@ -91,9 +91,11 @@ body {
   animation: fade-down 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Hold entrance animations while the intro loader is on screen */
+/* Hold entrance animations while the intro loader is on screen. The
+   navbar (fade-down) is held longer — until the zoom-through finishes —
+   via the separate `is-nav-loading` class. */
 html.is-loading .animate-fade-up,
-html.is-loading .animate-fade-down {
+html.is-nav-loading .animate-fade-down {
   animation-play-state: paused;
 }
 html.is-loading .reveal {

@@ -103,7 +103,7 @@ export default function Loader() {
               className="loader-mark"
               x="42%"
               y="50%"
-              fill="#000"
+              fill="#000000"
               textAnchor="middle"
               dominantBaseline="central"
             >
@@ -114,13 +114,13 @@ export default function Loader() {
               cx="48%"
               cy="53%"
               r="1.5%"
-              fill="#000"
+              fill="#000000"
             />
             <text
               className="loader-mark"
               x="54%"
               y="50%"
-              fill="#000"
+              fill="#000000"
               textAnchor="middle"
               dominantBaseline="central"
             >

@@ -22,9 +22,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* No scroll-behavior:smooth on the root: while it's active, Chrome's
+   scroll restoration after a reload starts from a wrong offset (~20%
+   down) and leaves the page mis-scrolled. Nothing on the site uses
+   in-page anchor scrolling, so it was purely a liability; if smooth
+   scrolling is ever needed, scope it to the interaction (e.g.
+   scrollTo({ behavior: "smooth" })) instead of the root. */
 
 body {
   background: var(--background);
@@ -77,6 +80,79 @@ body {
   animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+@keyframes fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-fade-down {
+  animation: fade-down 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Hold entrance animations while the intro loader is on screen. The
+   navbar (fade-down) is held longer — until the zoom-through finishes —
+   via the separate `is-nav-loading` class. */
+html.is-loading .animate-fade-up,
+html.is-nav-loading .animate-fade-down {
+  animation-play-state: paused;
+}
+html.is-loading .reveal {
+  opacity: 0 !important;
+  transform: translateY(28px) !important;
+  transition: none !important;
+}
+
+/* The marks are SVG <text> holes in the black mask, so the page shows
+   through the letters. Their group starts at opacity 0 in the markup
+   (they crossfade in after the write-on strokes finish), so no
+   pre-hydration flash is possible. */
+.loader-mark {
+  font-family: var(--font-qwitcher-grypen), cursive;
+  font-size: clamp(7rem, 18vw, 13rem);
+  font-weight: 700;
+}
+/* Hidden by default (covers pre-hydration for skipped intros); shown
+   while `is-loading` is set, and kept visible by `loader-active` (added
+   by the timeline) so the zoom-through keeps playing after
+   `is-loading` is released to start the page animations. Both "show"
+   rules out-rank the base "hide" rule on specificity, so source order
+   can never break this. */
+.loader-overlay {
+  display: none;
+}
+html.is-loading .loader-overlay,
+.loader-overlay.loader-active {
+  display: block;
+}
+
+/* ---- Star cursor + trail (StarCursor.tsx) ---- */
+/* Hide the native cursor while the custom star cursor is active; the
+   class is only added for fine pointers without reduced motion. */
+html.star-cursor,
+html.star-cursor * {
+  cursor: none !important;
+}
+.trail-star {
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: drop-shadow(0 0 5px currentColor);
+  will-change: transform, opacity;
+}
+
+/* Hidden until the hero is clicked (revealed by HeroStars.tsx) */
+.hero-star {
+  position: absolute;
+  opacity: 0;
+  filter: drop-shadow(0 0 6px currentColor);
+  will-change: transform, opacity;
+}
+
 @keyframes float {
   0%,
   100% {
@@ -98,7 +174,8 @@ body {
     background-position: 200% 50%;
   }
 }
-.text-gradient {
+.text-gradient,
+.text-gradient-bright {
   background: linear-gradient(
     90deg,
     var(--accent),
@@ -111,15 +188,24 @@ body {
   color: transparent;
   animation: gradient-pan 6s linear infinite;
 }
+/* Lighter stops for text sitting on bright artwork (hero headline) */
+.text-gradient-bright {
+  background-image: linear-gradient(
+    90deg,
+    #a5b4fc,
+    #a5f3fc,
+    #a5b4fc
+  );
+  background-size: 200% auto;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   .reveal,
   .animate-fade-up,
+  .animate-fade-down,
   .animate-float,
-  .text-gradient {
+  .text-gradient,
+  .text-gradient-bright {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;

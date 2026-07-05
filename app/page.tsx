@@ -1,5 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
+import BioSection from "./components/BioSection";
+import HeroBackdrop from "./components/HeroBackdrop";
+import HeroStars from "./components/HeroStars";
+import PandaParticles from "./components/PandaParticles";
 import Reveal from "./components/Reveal";
 import { SITE, tools, type Tool } from "./lib/data";
 
@@ -62,44 +66,61 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden">
+      <section className="relative -mt-16 flex min-h-[100svh] items-center">
+        <HeroBackdrop />
         <div className="glow pointer-events-none absolute inset-0 -z-10" />
-        <div className="mx-auto max-w-5xl px-6 py-28 sm:py-36">
-          <p className="animate-fade-up text-sm font-medium uppercase tracking-[0.2em] text-accent-2">
-            {SITE.role}
-          </p>
-          <h1
-            className="animate-fade-up mt-4 text-4xl font-bold leading-tight tracking-tight sm:text-6xl"
-            style={{ animationDelay: "80ms" }}
-          >
-            <span className="text-gradient">{SITE.name}</span>
-            
-          </h1>
+        {/* Radial scrim: dims the bright planet core behind the headline */}
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_42%_at_50%_50%,rgba(4,6,12,0.55),transparent_72%)]" />
+        <HeroStars />
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-6 sm:flex-row sm:justify-center sm:gap-8">
           <p
-            className="animate-fade-up mt-6 max-w-2xl text-lg leading-relaxed text-muted"
+            className="animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2 drop-shadow-[0_2px_10px_rgba(4,6,12,0.9)] sm:text-right sm:text-3xl"
             style={{ animationDelay: "160ms" }}
           >
-            A full-stack developer who ships industry-grade software from
-            asynchronous data-ingestion pipelines and REST APIs to authenticated
-            web apps and responsive marketing sites.
+            Full-Stack
           </p>
-          <div
-            className="animate-fade-up mt-10 flex flex-wrap gap-4"
-            style={{ animationDelay: "240ms" }}
+          {/* drop-shadow (not text-shadow): shadows bleed through the
+              transparent fill of background-clipped gradient text */}
+          <h1 className="animate-fade-up text-center text-5xl font-bold leading-tight tracking-tight drop-shadow-[0_3px_18px_rgba(4,6,12,0.9)] sm:text-7xl md:text-8xl">
+            <span className="text-gradient-bright">{SITE.name}</span>
+          </h1>
+          <p
+            className="animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2 drop-shadow-[0_2px_10px_rgba(4,6,12,0.9)] sm:text-3xl"
+            style={{ animationDelay: "160ms" }}
           >
-            <Link
-              href="/projects"
-              className="rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-transform hover:scale-105"
-            >
-              View my work
-            </Link>
-            <Link
-              href="/contact"
-              className="rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors hover:border-accent/60 hover:bg-accent/10"
-            >
-              Get in touch
-            </Link>
-          </div>
+            Developer
+          </p>
+        </div>
+      </section>
+
+      {/* Bio: text + CTA on the left, circular photo on the right.
+          Slides in on scroll (see BioSection). */}
+      <BioSection />
+
+      {/* Intro (below the fold): full-width panda with overlaid copy */}
+      <section className="relative w-full overflow-hidden">
+        <PandaParticles />
+        {/* Overlay sits on the right; pointer-events pass through to the
+            canvas except on the buttons themselves. */}
+        <div className="pointer-events-none px-6 pb-16 sm:absolute sm:inset-y-0 sm:right-8 sm:flex sm:w-[36%] sm:flex-col sm:justify-center sm:p-0 lg:right-16">
+          <Reveal>
+            <p className="text-lg leading-relaxed text-muted">
+              A full-stack developer who ships industry-grade UI animations and 
+              complex software from asynchronous data-ingestion pipelines and 
+              REST APIs to authenticated web apps and responsive marketing 
+              sites. Also, a lifelong learner who loves to explore new software.
+            </p>
+          </Reveal>
+          <Reveal delay={80}>
+            <div className="pointer-events-auto mt-10 flex flex-wrap gap-4">
+              <Link
+                href="/projects"
+                className="rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-transform hover:scale-105"
+              >
+                View my work
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
 

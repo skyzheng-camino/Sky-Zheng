@@ -10,9 +10,9 @@ export default function PageHeader({
   subtitle: string;
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-border">
+    <section className="relative -mt-16 overflow-hidden border-b border-border">
       <div className="glow pointer-events-none absolute inset-0 -z-10 opacity-70" />
-      <div className="mx-auto max-w-5xl px-6 py-20">
+      <div className="mx-auto max-w-5xl px-6 pb-20 pt-36">
         <Reveal>
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-accent-2">
             {eyebrow}

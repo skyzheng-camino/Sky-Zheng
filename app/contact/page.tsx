@@ -32,10 +32,13 @@ export default function ContactPage() {
 
       <section className="mx-auto max-w-2xl px-6 py-16">
         <Reveal>
+          {/* Gradient border wrapper to match the cards elsewhere on the
+              site; the form itself stays the bg-card surface. */}
+          <div className="rounded-2xl bg-gradient-to-br from-violet-500 via-indigo-500 to-cyan-400 p-[1.5px] shadow-[0_0_25px_-8px_rgba(124,58,237,0.55)]">
           <form
             action={`https://formsubmit.co/${SITE.email}`}
             method="POST"
-            className="space-y-5 rounded-2xl border border-border bg-card p-7"
+            className="space-y-5 rounded-2xl bg-card p-7"
           >
             {/* FormSubmit configuration */}
             <input
@@ -127,6 +130,7 @@ export default function ContactPage() {
               Send message
             </button>
           </form>
+          </div>
         </Reveal>
 
         <Reveal delay={120}>

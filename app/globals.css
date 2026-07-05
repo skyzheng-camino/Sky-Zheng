@@ -107,13 +107,12 @@ html.is-loading .reveal {
   transition: none !important;
 }
 
-/* Loader marks stay hidden until GSAP animates them in, preventing a
-   flash of the static S/Z before hydration; the overlay itself only
-   exists while the intro is active. The marks are SVG <text> holes in
-   the light-blue mask, so the page shows through the letters. */
+/* The marks are SVG <text> holes in the black mask, so the page shows
+   through the letters. Their group starts at opacity 0 in the markup
+   (they crossfade in after the write-on strokes finish), so no
+   pre-hydration flash is possible. */
 .loader-mark {
-  opacity: 0;
-  font-family: var(--font-caveat), cursive;
+  font-family: var(--font-qwitcher-grypen), cursive;
   font-size: clamp(7rem, 18vw, 13rem);
   font-weight: 700;
 }
@@ -129,6 +128,29 @@ html.is-loading .reveal {
 html.is-loading .loader-overlay,
 .loader-overlay.loader-active {
   display: block;
+}
+
+/* ---- Star cursor + trail (StarCursor.tsx) ---- */
+/* Hide the native cursor while the custom star cursor is active; the
+   class is only added for fine pointers without reduced motion. */
+html.star-cursor,
+html.star-cursor * {
+  cursor: none !important;
+}
+.trail-star {
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: drop-shadow(0 0 5px currentColor);
+  will-change: transform, opacity;
+}
+
+/* Hidden until the hero is clicked (revealed by HeroStars.tsx) */
+.hero-star {
+  position: absolute;
+  opacity: 0;
+  filter: drop-shadow(0 0 6px currentColor);
+  will-change: transform, opacity;
 }
 
 @keyframes float {

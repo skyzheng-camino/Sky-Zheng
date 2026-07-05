@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Caveat, Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Qwitcher_Grypen } from "next/font/google";
 import "./globals.css";
 import Loader from "./components/Loader";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollProgress from "./components/ScrollProgress";
+import StarCursor from "./components/StarCursor";
 import { SITE } from "./lib/data";
 
 const geistSans = Geist({
@@ -17,8 +18,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const caveat = Caveat({
-  variable: "--font-caveat",
+const qwitcherGrypen = Qwitcher_Grypen({
+  variable: "--font-qwitcher-grypen",
   subsets: ["latin"],
   weight: "700",
 });
@@ -41,7 +42,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${qwitcherGrypen.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         {/* Pause entrance animations before first paint; Loader releases them.
@@ -56,6 +57,7 @@ export default function RootLayout({
         />
         <Loader />
         <ScrollProgress />
+        <StarCursor />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

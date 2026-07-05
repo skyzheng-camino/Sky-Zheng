@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import BioSection from "./components/BioSection";
 import HeroBackdrop from "./components/HeroBackdrop";
+import HeroStars from "./components/HeroStars";
 import PandaParticles from "./components/PandaParticles";
 import Reveal from "./components/Reveal";
 import { SITE, tools, type Tool } from "./lib/data";
@@ -69,6 +71,7 @@ export default function Home() {
         <div className="glow pointer-events-none absolute inset-0 -z-10" />
         {/* Radial scrim: dims the bright planet core behind the headline */}
         <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_42%_at_50%_50%,rgba(4,6,12,0.55),transparent_72%)]" />
+        <HeroStars />
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-6 sm:flex-row sm:justify-center sm:gap-8">
           <p
             className="animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2 drop-shadow-[0_2px_10px_rgba(4,6,12,0.9)] sm:text-right sm:text-3xl"
@@ -89,6 +92,10 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      {/* Bio: text + CTA on the left, circular photo on the right.
+          Slides in on scroll (see BioSection). */}
+      <BioSection />
 
       {/* Intro (below the fold): full-width panda with overlaid copy */}
       <section className="relative w-full overflow-hidden">
@@ -111,12 +118,6 @@ export default function Home() {
                 className="rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-transform hover:scale-105"
               >
                 View my work
-              </Link>
-              <Link
-                href="/contact"
-                className="rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors hover:border-accent/60 hover:bg-accent/10"
-              >
-                Get in touch
               </Link>
             </div>
           </Reveal>

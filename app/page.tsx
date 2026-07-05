@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import HeroBackdrop from "./components/HeroBackdrop";
 import PandaParticles from "./components/PandaParticles";
 import Reveal from "./components/Reveal";
 import { SITE, tools, type Tool } from "./lib/data";
@@ -63,20 +64,25 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative -mt-16 flex min-h-[100svh] items-center overflow-hidden">
+      <section className="relative -mt-16 flex min-h-[100svh] items-center">
+        <HeroBackdrop />
         <div className="glow pointer-events-none absolute inset-0 -z-10" />
+        {/* Radial scrim: dims the bright planet core behind the headline */}
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_42%_at_50%_50%,rgba(4,6,12,0.55),transparent_72%)]" />
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-6 sm:flex-row sm:justify-center sm:gap-8">
           <p
-            className="animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2/70 sm:text-right sm:text-3xl"
+            className="animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2 drop-shadow-[0_2px_10px_rgba(4,6,12,0.9)] sm:text-right sm:text-3xl"
             style={{ animationDelay: "160ms" }}
           >
             Full-Stack
           </p>
-          <h1 className="animate-fade-up text-center text-5xl font-bold leading-tight tracking-tight sm:text-7xl md:text-8xl">
-            <span className="text-gradient opacity-80">{SITE.name}</span>
+          {/* drop-shadow (not text-shadow): shadows bleed through the
+              transparent fill of background-clipped gradient text */}
+          <h1 className="animate-fade-up text-center text-5xl font-bold leading-tight tracking-tight drop-shadow-[0_3px_18px_rgba(4,6,12,0.9)] sm:text-7xl md:text-8xl">
+            <span className="text-gradient-bright">{SITE.name}</span>
           </h1>
           <p
-            className="animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2/70 sm:text-3xl"
+            className="animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2 drop-shadow-[0_2px_10px_rgba(4,6,12,0.9)] sm:text-3xl"
             style={{ animationDelay: "160ms" }}
           >
             Developer

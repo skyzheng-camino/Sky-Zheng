@@ -22,9 +22,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* No scroll-behavior:smooth on the root: while it's active, Chrome's
+   scroll restoration after a reload starts from a wrong offset (~20%
+   down) and leaves the page mis-scrolled. Nothing on the site uses
+   in-page anchor scrolling, so it was purely a liability; if smooth
+   scrolling is ever needed, scope it to the interaction (e.g.
+   scrollTo({ behavior: "smooth" })) instead of the root. */
 
 body {
   background: var(--background);
@@ -149,7 +152,8 @@ html.is-loading .loader-overlay,
     background-position: 200% 50%;
   }
 }
-.text-gradient {
+.text-gradient,
+.text-gradient-bright {
   background: linear-gradient(
     90deg,
     var(--accent),
@@ -162,16 +166,24 @@ html.is-loading .loader-overlay,
   color: transparent;
   animation: gradient-pan 6s linear infinite;
 }
+/* Lighter stops for text sitting on bright artwork (hero headline) */
+.text-gradient-bright {
+  background-image: linear-gradient(
+    90deg,
+    #a5b4fc,
+    #a5f3fc,
+    #a5b4fc
+  );
+  background-size: 200% auto;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   .reveal,
   .animate-fade-up,
   .animate-fade-down,
   .animate-float,
-  .text-gradient {
+  .text-gradient,
+  .text-gradient-bright {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;

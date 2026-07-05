@@ -45,10 +45,13 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col">
         {/* Pause entrance animations before first paint; Loader releases them.
-            Skipped for reduced-motion users. */}
+            Skipped for reduced-motion users.
+            Also: on reloads, Chrome's automatic scroll restoration lands
+            ~20% of the viewport too low on this page (and compounds per
+            reload), so we restore the saved position manually instead. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("is-loading","is-nav-loading")}}catch(e){}`,
+            __html: `try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("is-loading","is-nav-loading")}}catch(e){};try{var n=performance.getEntriesByType("navigation")[0];if(n&&(n.type==="reload"||n.type==="back_forward")){history.scrollRestoration="manual";var y=+sessionStorage.getItem("sz-scroll:"+location.pathname)||0;addEventListener("load",function(){requestAnimationFrame(function(){scrollTo(0,y);requestAnimationFrame(function(){history.scrollRestoration="auto"})})})}addEventListener("pagehide",function(){try{sessionStorage.setItem("sz-scroll:"+location.pathname,String(scrollY))}catch(e){}})}catch(e){}`,
           }}
         />
         <Loader />

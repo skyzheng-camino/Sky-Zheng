@@ -39,7 +39,17 @@ export default function PandaParticles() {
   }, []);
 
   return (
-    <canvas ref={canvasRef} aria-hidden className="block h-auto w-full" />
+    // width/height must match the internal resolution set in the effect:
+    // they give the canvas its correct aspect ratio before hydration, so
+    // the page doesn't grow ~200px mid-load (which breaks the browser's
+    // scroll restoration on reload).
+    <canvas
+      ref={canvasRef}
+      width={1000}
+      height={640}
+      aria-hidden
+      className="block h-auto w-full"
+    />
   );
 }
 

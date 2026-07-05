@@ -64,7 +64,12 @@ function ToolCard({ tool, delay }: { tool: Tool; delay: number }) {
 
 export default function Home() {
   return (
-    <div>
+    // Clip horizontal overflow page-wide: scroll-in transforms and the
+    // scaled hero backdrop/stars can poke past the viewport edge on
+    // narrow screens, which would otherwise add a horizontal scrollbar.
+    // `clip` (x-only) leaves vertical scrolling and the sticky navbar
+    // (rendered outside this tree) untouched.
+    <div className="overflow-x-clip">
       {/* Hero */}
       <section className="relative -mt-16 flex min-h-[100svh] items-center">
         <HeroBackdrop />

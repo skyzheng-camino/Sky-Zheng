@@ -1,0 +1,29 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Tab icon: the intro loader's "S · Z" monogram — the same
+       hand-drawn brush-stroke paths, light-blue gradient on black. -->
+  <defs>
+    <linearGradient id="sz" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c4f5ff" />
+      <stop offset="50%" stop-color="#7dd3fc" />
+      <stop offset="100%" stop-color="#6aa8f0" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="#000" />
+  <g
+    fill="none"
+    stroke="url(#sz)"
+    stroke-width="100"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path
+      transform="translate(-12 -2) scale(0.064)"
+      d="M 722 435 C 748 402, 760 370, 750 347 C 730 310, 637 285, 570 291 C 498 299, 417 348, 392 414 C 376 458, 408 508, 462 545 C 518 583, 585 612, 618 650 C 646 688, 630 726, 578 757 C 500 790, 405 800, 348 784 C 312 770, 308 747, 326 722 C 350 691, 430 665, 505 662 C 572 660, 638 674, 668 700 C 685 715, 688 732, 680 746"
+    />
+    <path
+      transform="translate(12 -3) scale(0.064)"
+      d="M 342 390 C 380 368, 470 345, 560 333 C 640 324, 720 326, 762 340 C 782 348, 790 355, 782 368 C 745 415, 612 496, 490 570 C 408 624, 335 682, 285 708 C 260 722, 256 737, 276 741 C 338 745, 480 719, 590 704 C 658 696, 714 699, 740 716 C 758 730, 748 768, 716 794"
+    />
+  </g>
+  <circle cx="32" cy="31.5" r="2.6" fill="url(#sz)" />
+</svg>

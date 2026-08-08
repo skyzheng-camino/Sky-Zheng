@@ -64,7 +64,7 @@ export default function BioSection() {
       // image starting at x:+90) can't widen the page / add a horizontal
       // scrollbar on narrow screens. `clip` (not `hidden`) avoids making
       // this a scroll container, so nothing else is affected.
-      className="mx-auto max-w-5xl overflow-x-clip px-6 py-20 sm:py-28"
+      className="mx-auto w-full max-w-[90vw] overflow-x-clip py-20 sm:py-28"
     >
       <div className="grid grid-cols-1 items-center gap-10 sm:grid-cols-2 sm:gap-12">
         <div>

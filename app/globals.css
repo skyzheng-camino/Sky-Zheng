@@ -166,6 +166,38 @@ html.star-cursor * {
   animation: float 6s ease-in-out infinite;
 }
 
+/* ---- Projects showcase (ProjectShowcase.tsx) ---- */
+/* Golden-ratio type scale for the stage. The description reads at
+   exactly the project title size divided by phi. The company name sits
+   half a step below the title (phi's square root, 1.272) so it stays
+   the second-loudest thing on the stage. */
+.showcase-stage {
+  --phi: 1.618;
+  --root-phi: 1.272;
+  --stage-title: 2.5rem;
+  --stage-org: calc(var(--stage-title) / var(--root-phi));
+  --stage-desc: calc(var(--stage-title) / var(--phi));
+}
+
+/* Each block starts clipped shut from a random edge (--clip) and is
+   wiped open when its layer becomes the active one. Positions and
+   delays are supplied per block as inline custom properties. */
+.showcase-item {
+  opacity: 0;
+  clip-path: var(--clip, inset(0% 0% 100% 0%));
+  transform: translateY(14px);
+  transition:
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0s),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0s),
+    clip-path 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0s);
+  will-change: opacity, transform, clip-path;
+}
+[data-active="true"] > .showcase-item {
+  opacity: 1;
+  clip-path: inset(0% 0% 0% 0%);
+  transform: translateY(0);
+}
+
 @keyframes gradient-pan {
   0% {
     background-position: 0% 50%;
@@ -209,6 +241,14 @@ html.star-cursor * {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;
+    transform: none !important;
+  }
+  /* The inactive layer's own opacity still hides these, so forcing the
+     blocks open only skips the wipe, it doesn't reveal every project. */
+  .showcase-item {
+    transition: none !important;
+    opacity: 1 !important;
+    clip-path: none !important;
     transform: none !important;
   }
 }

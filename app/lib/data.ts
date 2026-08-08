@@ -118,7 +118,7 @@ export const projects: Project[] = [
     title: "Camino Website",
     org: "Camino",
     description:
-      "Built the company website for Camino, a Kansas City software consulting firm that partners with visionary teams to build agentic AI solutions and digital products. The site showcases the firm's UI design, software engineering, and strategy services with a distinctive rose-trail visual identity, custom typography, and smooth animations, deployed on Vercel.",
+      "Company site designed with complex animations for a Kansas City consultancy building agentic AI products, showing their design, engineering, and strategy work in a rose-trail identity.",
     stack: ["Next.js", "React", "CSS", "Vercel"],
     image: "/projects/camino.jpg",
     link: "https://www.caminokc.com/",
@@ -127,7 +127,7 @@ export const projects: Project[] = [
     title: "Data-Ingestion Backend",
     org: "SC Analytics Zones",
     description:
-      "Architected an asynchronous data-ingestion REST API that cleans and transforms data files for Supabase to store, while tracking the development process using Render and Docker.",
+      "An asynchronous REST API that cleans and transforms uploaded data files into Supabase, containerized with Docker and deployed on Render.",
     stack: ["FastAPI", "Python", "Supabase", "Docker", "Render"],
     image: "/projects/sc-analytics-zones.jpg",
     link: "https://www.scanalyticszones.app/",
@@ -136,7 +136,7 @@ export const projects: Project[] = [
     title: "Client Web App",
     org: "SC Analytics Zones",
     description:
-      "Developed a bundled application consisting of Vite and React Router with Supabase for authentication and data to implement role-based access (admin vs. client), deployed via Vercel.",
+      "A Vite and React Router app using Supabase for auth and data, enforcing role-based access for admins and clients. Shipped on Vercel.",
     stack: ["Vite", "React Router", "Supabase", "Vercel"],
     image: "/projects/sc-analytics-zones.jpg",
     link: "https://www.scanalyticszones.app/",
@@ -145,7 +145,7 @@ export const projects: Project[] = [
     title: "Jaeli Construction Landing Page",
     org: "Jaeli Construction",
     description:
-      "Designed and built a responsive marketing website utilizing Next.js and TypeScript, styled with Tailwind CSS for the UI, and Supabase for collecting customer reviews.",
+      "A responsive marketing site in Next.js and TypeScript, styled with Tailwind CSS, with Supabase collecting customer reviews.",
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase"],
     image: "/projects/jaeli-construction.jpg",
     link: "https://www.jaeliconstruction.com/",

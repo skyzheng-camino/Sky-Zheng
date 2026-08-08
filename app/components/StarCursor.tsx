@@ -41,14 +41,8 @@ export default function StarCursor() {
         repeat: -1,
         ease: "sine.inOut",
       });
-      const xTo = gsap.quickTo(cursor, "x", {
-        duration: 0.15,
-        ease: "power2.out",
-      });
-      const yTo = gsap.quickTo(cursor, "y", {
-        duration: 0.15,
-        ease: "power2.out",
-      });
+      const xTo = gsap.quickSetter(cursor, "x", "px");
+      const yTo = gsap.quickSetter(cursor, "y", "px");
 
       const spawn = (x: number, y: number) => {
         const el = document.createElement("div");

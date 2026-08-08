@@ -198,6 +198,46 @@ html.star-cursor * {
   transform: translateY(0);
 }
 
+/* ---- Tools card deck (ToolDeck.tsx) ---- */
+.deck-stage {
+  --deck-card-w: clamp(12rem, 46vw, 15.5rem);
+  position: relative;
+  /* Own stacking context. The cards re-stack against each other using a
+     wide z range (see geometry() in ToolDeck.tsx), which without this
+     would out-rank the whole page: the loader (100), the star cursor
+     (90), the scroll bar (50), and the navbar (40). Containing them here
+     keeps those numbers meaningful only *within* the deck. */
+  z-index: 0;
+  /* Card height (2:3) plus slack at the bottom for the drop and tilt of
+     the buried cards, which are the same size as the top one and so hang
+     below it. Cards only ever move down, so all the slack goes there. */
+  height: calc(var(--deck-card-w) * 1.5 + 5.5rem);
+  /* Horizontal drags belong to the deck; vertical ones stay with the page. */
+  touch-action: pan-y;
+  user-select: none;
+  outline: none;
+}
+.deck-slot {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: var(--deck-card-w);
+  aspect-ratio: 2 / 3;
+  /* Centred with a negative margin rather than translateX(-50%): GSAP
+     owns `transform` on these elements, so the centring has to sit
+     outside it or every frame would wipe it out. */
+  margin-left: calc(var(--deck-card-w) / -2);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+/* Everything printed on a card is sized in `em` against this, so the
+   face scales as one piece with the fluid card width — the artwork on a
+   real card doesn't stay the same size when the card gets smaller, and
+   fixed pixels would overflow the shorter card on a phone. */
+.deck-face {
+  font-size: calc(var(--deck-card-w) / 20);
+}
+
 @keyframes gradient-pan {
   0% {
     background-position: 0% 50%;

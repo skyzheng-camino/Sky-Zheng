@@ -64,7 +64,7 @@ export default function BioSection() {
       // image starting at x:+90) can't widen the page / add a horizontal
       // scrollbar on narrow screens. `clip` (not `hidden`) avoids making
       // this a scroll container, so nothing else is affected.
-      className="mx-auto w-full max-w-[90vw] overflow-x-clip py-20 sm:py-28"
+      className="mx-auto w-full max-w-4xl overflow-x-clip px-6 py-20 sm:py-28"
     >
       <div className="grid grid-cols-1 items-center gap-10 sm:grid-cols-2 sm:gap-12">
         <div>
@@ -87,7 +87,7 @@ export default function BioSection() {
 
         <div
           ref={imageRef}
-          className="mx-auto w-full max-w-xs sm:ml-auto sm:mr-0"
+          className="mx-auto w-full max-w-xs"
         >
           {/* Gradient ring around the circular photo */}
           <div className="rounded-full bg-gradient-to-br from-violet-500 via-indigo-500 to-cyan-400 p-[3px] shadow-[0_0_40px_-8px_rgba(124,58,237,0.55)]">

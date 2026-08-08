@@ -1,66 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
 import BioSection from "./components/BioSection";
 import HeroBackdrop from "./components/HeroBackdrop";
 import HeroStars from "./components/HeroStars";
 import PandaParticles from "./components/PandaParticles";
 import Reveal from "./components/Reveal";
-import { SITE, tools, type Tool } from "./lib/data";
-
-const categoryColors: Record<Tool["category"], string> = {
-  Language: "text-sky-300 ring-sky-400/30 bg-sky-400/10",
-  Framework: "text-violet-300 ring-violet-400/30 bg-violet-400/10",
-  Tool: "text-emerald-300 ring-emerald-400/30 bg-emerald-400/10",
-  Platform: "text-amber-300 ring-amber-400/30 bg-amber-400/10",
-};
-
-function ToolCard({ tool, delay }: { tool: Tool; delay: number }) {
-  return (
-    <Reveal direction="scale" delay={delay}>
-      {/* Gradient border + glow wrapper */}
-      <div className="group rounded-2xl bg-gradient-to-br from-violet-500 via-indigo-500 to-cyan-400 p-[1.5px] shadow-[0_0_25px_-8px_rgba(124,58,237,0.55)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_32px_-4px_rgba(34,211,238,0.6)]">
-        <div className="relative h-44 overflow-hidden rounded-2xl bg-card p-5">
-          {/* Front: logo + category + name */}
-          <div className="flex h-full flex-col justify-between transition-opacity duration-300 group-hover:opacity-0">
-            <div className="flex items-center gap-3">
-              <span
-                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full shadow-md ${
-                  tool.name === "Vercel" ? "bg-black" : "bg-white"
-                }`}
-              >
-                <Image
-                  src={tool.logo}
-                  alt={`${tool.name} logo`}
-                  width={36}
-                  height={36}
-                  className={`object-contain ${
-                    tool.name === "Python" || tool.name === "Docker"
-                      ? "h-9 w-9"
-                      : "h-7 w-7"
-                  }`}
-                  unoptimized
-                />
-              </span>
-              <span
-                className={`inline-flex w-fit rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ${categoryColors[tool.category]}`}
-              >
-                {tool.category}
-              </span>
-            </div>
-            <h3 className="text-lg font-semibold leading-snug">{tool.name}</h3>
-          </div>
-
-          {/* Back: description (revealed on hover/focus) */}
-          <div className="pointer-events-none absolute inset-0 flex items-center rounded-2xl bg-card/95 p-5 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
-            <p className="text-sm leading-relaxed text-muted">
-              {tool.description}
-            </p>
-          </div>
-        </div>
-      </div>
-    </Reveal>
-  );
-}
+import ToolDeck from "./components/ToolDeck";
+import { SITE, tools } from "./lib/data";
 
 export default function Home() {
   return (
@@ -129,24 +74,24 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Tools section */}
-      <section className="mx-auto max-w-5xl px-6 pb-28">
-        <Reveal>
-          <h2 className="mb-3 text-2xl font-bold tracking-tight sm:text-3xl">
-            Tools, Languages &amp; Frameworks
-          </h2>
-        </Reveal>
-        <Reveal delay={80}>
-          <p className="mb-10 max-w-2xl text-muted">
-            The stack I reach for. Hover over any card to learn what each one is.
-          </p>
-        </Reveal>
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {tools.map((tool, i) => (
-            <ToolCard key={tool.name} tool={tool} delay={(i % 3) * 80} />
-          ))}
+      {/* Tools section. The heading is held to the text column; the deck
+          itself runs full-bleed so the whole width is draggable. */}
+      <section className="pb-28">
+        <div className="mx-auto max-w-5xl px-6">
+          <Reveal>
+            <h2 className="mb-3 text-2xl font-bold tracking-tight sm:text-3xl">
+              Tools, Languages &amp; Frameworks
+            </h2>
+          </Reveal>
+          <Reveal delay={80}>
+            <p className="mb-8 max-w-2xl text-muted">
+              The stack I reach for, dealt as a hand of cards. Drag the deck,
+              swipe sideways, or use the arrows to bring a card to the top.
+            </p>
+          </Reveal>
         </div>
+
+        <ToolDeck tools={tools} />
       </section>
     </div>
   );

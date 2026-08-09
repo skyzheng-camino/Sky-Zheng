@@ -198,6 +198,61 @@ html.star-cursor * {
   transform: translateY(0);
 }
 
+/* ---- Bio photo coin (BioSection.tsx) ---- */
+.coin {
+  position: relative;
+  aspect-ratio: 1;
+  /* Shallow enough that the near edge visibly swells mid-spin — a flat
+     projection reads as a cross-fade rather than a coin turning over. */
+  perspective: 900px;
+  /* The back's type is sized in `cqw` so the whole face scales with the
+     coin, which is fluid below `sm`. Viewport units would drift out of
+     proportion with it. */
+  container-type: inline-size;
+  border-radius: 9999px;
+}
+.coin:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+.coin-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+/* Focus stands in for hover: a keyboard user can't hover, and both
+   states release the same way (blur / pointer-out) so the coin always
+   settles back on the photo. */
+.coin:hover .coin-inner,
+.coin:focus-visible .coin-inner {
+  transform: rotateY(180deg);
+}
+.coin-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+.coin-back {
+  transform: rotateY(180deg);
+}
+/* Tinted like the site's ambient `.glow` so the reverse reads as the
+   same object as the ring around the photo, not a different card. */
+.coin-back-face {
+  background:
+    radial-gradient(75% 75% at 30% 20%, rgba(99, 102, 241, 0.28), transparent 70%),
+    radial-gradient(60% 60% at 75% 85%, rgba(34, 211, 238, 0.18), transparent 70%),
+    var(--card);
+}
+.coin-rim-text {
+  fill: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+}
+
 /* ---- Tools card deck (ToolDeck.tsx) ---- */
 .deck-stage {
   --deck-card-w: clamp(12rem, 46vw, 15.5rem);
@@ -282,6 +337,12 @@ html.star-cursor * {
     transition: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+  /* Keep the flip reachable but drop the spin: the faces swap instantly
+     instead of turning. Zeroing the transform outright would strand the
+     back face permanently mirrored behind the photo. */
+  .coin-inner {
+    transition: none !important;
   }
   /* The inactive layer's own opacity still hides these, so forcing the
      blocks open only skips the wipe, it doesn't reveal every project. */

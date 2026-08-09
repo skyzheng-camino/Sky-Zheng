@@ -65,7 +65,7 @@ export default function Home() {
             <div className="pointer-events-auto mt-10 flex flex-wrap gap-4">
               <Link
                 href="/projects"
-                className="rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-transform hover:scale-105"
+                className="btn-wipe inline-flex rounded-full px-6 py-3 text-sm font-medium"
               >
                 View my work
               </Link>

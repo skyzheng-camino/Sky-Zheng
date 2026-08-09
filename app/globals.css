@@ -198,6 +198,42 @@ html.star-cursor * {
   transform: translateY(0);
 }
 
+/* ---- Wipe buttons (hero "View my work", bio "Get in touch") ----
+   Black at rest; hovering sweeps an accent fill in from the left edge.
+   The fill is a ::before at z-index -1 rather than an animated
+   background-position: a transform is compositor-driven, so the sweep
+   stays smooth, and `isolation` keeps that negative layer above the
+   button's own black fill while staying below the label. */
+.btn-wipe {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--border);
+  transition:
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+.btn-wipe::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-wipe:hover::before,
+.btn-wipe:focus-visible::before {
+  transform: scaleX(1);
+}
+.btn-wipe:hover,
+.btn-wipe:focus-visible {
+  border-color: var(--accent);
+  color: #fff;
+}
+
 /* ---- Bio photo coin (BioSection.tsx) ---- */
 .coin {
   position: relative;
@@ -337,6 +373,10 @@ html.star-cursor * {
     transition: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+  /* Hover still fills the button, it just arrives instead of sweeping. */
+  .btn-wipe::before {
+    transition: none !important;
   }
   /* Keep the flip reachable but drop the spin: the faces swap instantly
      instead of turning. Zeroing the transform outright would strand the

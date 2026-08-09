@@ -154,7 +154,7 @@ export default function BioSection() {
           <div ref={buttonRef} className="mt-8">
             <Link
               href="/contact"
-              className="inline-flex rounded-full border border-border px-6 py-3 text-sm font-medium transition-colors hover:border-accent/60 hover:bg-accent/10"
+              className="btn-wipe inline-flex rounded-full px-6 py-3 text-sm font-medium"
             >
               Get in touch
             </Link>

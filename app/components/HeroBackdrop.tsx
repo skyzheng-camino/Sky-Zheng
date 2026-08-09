@@ -73,16 +73,32 @@ export default function HeroBackdrop() {
       <div ref={tiltRef} className="absolute inset-0 will-change-transform">
         {/* When swapping artwork, save it under a NEW filename — the
             optimizer and browser cache by URL (4h), and Next rejects
-            query-string versioning on local images. */}
+            query-string versioning on local images.
+
+            Both variants are always mounted and crossfaded by CSS off
+            `data-hero` on <html> (see HeroPlanetToggle). Only the
+            default one is preloaded — preloading both would fetch
+            artwork the visitor may never see, and the pink one is in
+            the viewport anyway, so it loads promptly on its own. */}
         <Image
           src="/hero-planet-2.png"
           alt=""
           fill
           preload
           sizes="100vw"
-          className="object-cover"
+          className="hero-planet hero-planet-blue object-cover"
+        />
+        <Image
+          src="/hero-planet-rainbow-3.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="hero-planet hero-planet-pink object-cover"
         />
       </div>
+      {/* Bloom that hides the crossfade: it peaks over the planet core
+          exactly while the two images swap underneath it. */}
+      <div className="hero-bloom" />
       {/* Fade the tail end into the page background */}
       <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent to-background" />
     </div>

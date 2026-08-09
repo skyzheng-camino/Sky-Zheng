@@ -1,6 +1,7 @@
 import Link from "next/link";
 import BioSection from "./components/BioSection";
 import HeroBackdrop from "./components/HeroBackdrop";
+import HeroPlanetToggle from "./components/HeroPlanetToggle";
 import HeroStars from "./components/HeroStars";
 import PandaParticles from "./components/PandaParticles";
 import Reveal from "./components/Reveal";
@@ -24,7 +25,7 @@ export default function Home() {
         <HeroStars />
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-6 sm:flex-row sm:justify-center sm:gap-8">
           <p
-            className="animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2 drop-shadow-[0_2px_10px_rgba(4,6,12,0.9)] sm:text-right sm:text-3xl"
+            className="hero-label animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2 drop-shadow-[0_2px_10px_rgba(4,6,12,0.9)] sm:text-right sm:text-3xl"
             style={{ animationDelay: "160ms" }}
           >
             Full-Stack
@@ -35,11 +36,18 @@ export default function Home() {
             <span className="text-gradient-bright">{SITE.name}</span>
           </h1>
           <p
-            className="animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2 drop-shadow-[0_2px_10px_rgba(4,6,12,0.9)] sm:text-3xl"
+            className="hero-label animate-fade-up text-2xl font-medium uppercase tracking-[0.2em] text-accent-2 drop-shadow-[0_2px_10px_rgba(4,6,12,0.9)] sm:text-3xl"
             style={{ animationDelay: "160ms" }}
           >
             Developer
           </p>
+        </div>
+        {/* Planet swap, parked clear of the headline at the hero's foot */}
+        <div
+          className="animate-fade-up absolute inset-x-0 bottom-10 flex justify-center"
+          style={{ animationDelay: "320ms" }}
+        >
+          <HeroPlanetToggle />
         </div>
       </section>
 

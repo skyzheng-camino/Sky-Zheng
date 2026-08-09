@@ -40,6 +40,132 @@ body {
   background:
     radial-gradient(60% 60% at 50% 0%, rgba(99, 102, 241, 0.18), transparent 70%),
     radial-gradient(40% 40% at 80% 20%, rgba(34, 211, 238, 0.1), transparent 70%);
+  transition: background 0.6s ease 0.3s;
+}
+
+/* ---- Hero planet variants (HeroBackdrop / HeroPlanetToggle) ----
+   `data-hero="pink"` on <html> swaps the artwork and everything tuned
+   to it. Scoped to the hero on purpose: --accent/--accent-2 keep their
+   indigo/cyan values so the rest of the site is untouched. */
+.hero-planet {
+  /* Delayed so the swap lands under the peak of the bloom rather than
+     being visible as a dissolve on either side of it. */
+  transition: opacity 0.4s ease 0.3s;
+}
+.hero-planet-pink {
+  opacity: 0;
+}
+:root[data-hero="pink"] .hero-planet-blue {
+  opacity: 0;
+}
+:root[data-hero="pink"] .hero-planet-pink {
+  opacity: 1;
+}
+
+:root[data-hero="pink"] .glow {
+  background:
+    radial-gradient(60% 60% at 50% 0%, rgba(236, 72, 153, 0.2), transparent 70%),
+    radial-gradient(40% 40% at 80% 20%, rgba(244, 114, 182, 0.12), transparent 70%);
+}
+
+/* Headline + side labels follow the planet, hero-only. */
+:root[data-hero="pink"] .text-gradient-bright {
+  background-image: linear-gradient(90deg, #fbcfe8, #ffd9ef, #fbcfe8);
+}
+.hero-label {
+  transition: color 0.5s ease 0.3s;
+}
+:root[data-hero="pink"] .hero-label {
+  color: #ff9ad6;
+}
+
+/* The flash. Sits over the artwork inside the backdrop, so the scrim
+   above it still protects the headline's contrast at the peak. */
+.hero-bloom {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    34% 34% at 50% 50%,
+    rgba(255, 226, 244, 0.95),
+    rgba(255, 92, 186, 0.45) 45%,
+    transparent 72%
+  );
+}
+@keyframes hero-bloom {
+  0% {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+  38% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+:root[data-hero-bloom] .hero-bloom {
+  animation: hero-bloom 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* The artwork itself brightens into the flash, so the swap reads as the
+   planet igniting rather than a glow drifting over a static image. */
+@keyframes hero-planet-flash {
+  0%,
+  100% {
+    filter: none;
+  }
+  38% {
+    filter: brightness(1.32) saturate(1.08);
+  }
+}
+:root[data-hero-bloom] .hero-planet {
+  animation: hero-planet-flash 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---- Hero planet toggle button ---- */
+.hero-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: rgba(10, 10, 15, 0.55);
+  backdrop-filter: blur(6px);
+  padding: 0.6rem 1.1rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--foreground);
+  cursor: pointer;
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease;
+}
+.hero-toggle:hover,
+.hero-toggle:focus-visible {
+  border-color: color-mix(in srgb, var(--accent-2) 60%, transparent);
+  background: rgba(10, 10, 15, 0.75);
+}
+:root[data-hero="pink"] .hero-toggle:hover,
+:root[data-hero="pink"] .hero-toggle:focus-visible {
+  border-color: rgba(255, 154, 214, 0.6);
+}
+/* Little planet that changes colour with the hero. */
+.hero-toggle-dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #67e8f9, #4f7df3);
+  box-shadow: 0 0 10px -1px rgba(34, 211, 238, 0.8);
+  transition:
+    background 0.5s ease 0.3s,
+    box-shadow 0.5s ease 0.3s;
+}
+:root[data-hero="pink"] .hero-toggle-dot {
+  background: linear-gradient(135deg, #ffb3e0, #ec4899);
+  box-shadow: 0 0 10px -1px rgba(236, 72, 153, 0.85);
 }
 
 /* ---- Scroll-reveal (driven by IntersectionObserver in Reveal.tsx) ---- */
@@ -374,6 +500,20 @@ html.star-cursor * {
     transition: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+  /* The planet still swaps, it just doesn't flash or dissolve. */
+  .hero-bloom {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+  .hero-planet {
+    animation: none !important;
+  }
+  .hero-planet,
+  .hero-label,
+  .hero-toggle-dot,
+  .glow {
+    transition: none !important;
   }
   /* Hover still fills the button, it just arrives instead of sweeping. */
   .btn-wipe::before {

@@ -14,7 +14,10 @@ import { STAR_PATH } from "./StarCursor";
  */
 const VISIBLE_SECONDS = 3;
 const COUNT = 26;
+// Recoloured on every reveal so a show started after the planet swap
+// matches whichever hero is on screen (see HeroPlanetToggle).
 const COLORS = ["#a5f3fc", "#a5b4fc", "#e0f2fe"];
+const COLORS_PINK = ["#fbcfe8", "#f9a8d4", "#ffe4f3"];
 
 export default function HeroStars() {
   const ref = useRef<HTMLDivElement>(null);
@@ -45,6 +48,12 @@ export default function HeroStars() {
     const reveal = () => {
       fadeTimer?.kill();
       gsap.killTweensOf(stars);
+      const palette =
+        document.documentElement.dataset.hero === "pink" ? COLORS_PINK : COLORS;
+      for (const s of stars) {
+        (s as HTMLElement).style.color =
+          palette[(Math.random() * palette.length) | 0];
+      }
       if (reduced) {
         gsap.set(stars, { opacity: 0.9 });
         fadeTimer = gsap.delayedCall(VISIBLE_SECONDS, () =>

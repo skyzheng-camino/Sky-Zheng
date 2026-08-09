@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SITE } from "../lib/data";
@@ -88,15 +88,16 @@ const FACTS: { label: string; icon: ReactNode }[] = [
  * — and reverse if you scroll back up. Skipped for reduced-motion
  * users, who just see it in place.
  *
- * The photo itself is a two-sided coin: hovering (or focusing) it spins
- * it on its vertical axis to a struck reverse face. See `.coin` in
- * globals.css.
+ * The photo itself is a two-sided coin: clicking it spins it on its
+ * vertical axis to a struck reverse face, and it stays there until
+ * clicked again. See `.coin` in globals.css.
  */
 export default function BioSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLParagraphElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+  const [flipped, setFlipped] = useState(false);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -166,8 +167,18 @@ export default function BioSection() {
           className="mx-auto w-full max-w-xs"
         >
           {/* Perspective lives here rather than on the ref above, whose
-              transform GSAP owns and rewrites every scroll frame. */}
-          <div className="coin" tabIndex={0}>
+              transform GSAP owns and rewrites every scroll frame. A real
+              <button> so a click, Enter/Space, and a tap all work without
+              wiring up key handlers by hand. */}
+          <button
+            type="button"
+            onClick={() => setFlipped((f) => !f)}
+            aria-pressed={flipped}
+            aria-label={
+              flipped ? "Turn the coin back to the photo" : "Turn the coin over"
+            }
+            className={`coin${flipped ? " is-flipped" : ""}`}
+          >
             <div className="coin-inner">
               {/* Heads: the photo, in its gradient ring */}
               <div className={`coin-face ${RING}`}>
@@ -255,7 +266,7 @@ export default function BioSection() {
                 </div>
               </div>
             </div>
-          </div>
+          </button>
         </div>
       </div>
     </section>

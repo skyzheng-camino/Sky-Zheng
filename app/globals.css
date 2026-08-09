@@ -236,6 +236,9 @@ html.star-cursor * {
 
 /* ---- Bio photo coin (BioSection.tsx) ---- */
 .coin {
+  display: block;
+  width: 100%;
+  cursor: pointer;
   position: relative;
   aspect-ratio: 1;
   /* Shallow enough that the near edge visibly swells mid-spin — a flat
@@ -258,11 +261,9 @@ html.star-cursor * {
   transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
-/* Focus stands in for hover: a keyboard user can't hover, and both
-   states release the same way (blur / pointer-out) so the coin always
-   settles back on the photo. */
-.coin:hover .coin-inner,
-.coin:focus-visible .coin-inner {
+/* Driven by click, not hover: the coin holds whichever face you turned
+   it to until you click again. React owns the class. */
+.coin.is-flipped .coin-inner {
   transform: rotateY(180deg);
 }
 .coin-face {

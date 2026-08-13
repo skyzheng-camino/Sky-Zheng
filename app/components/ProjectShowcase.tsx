@@ -277,6 +277,22 @@ export default function ProjectShowcase({ projects }: { projects: Project[] }) {
           {projects.map((project, i) => {
             const layout = layouts[i];
             const isActive = i === active;
+            const artwork = (
+              <div className="relative w-full shrink-0 aspect-[16/11] overflow-hidden rounded-xl border border-border shadow-[0_24px_70px_-20px_rgba(0,0,0,0.95)]">
+                {project.image ? (
+                  <Image
+                    src={project.image}
+                    alt={`${project.title} preview`}
+                    fill
+                    loading="eager"
+                    sizes="40vw"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="h-full w-full bg-gradient-to-br from-violet-500/20 via-indigo-500/10 to-cyan-400/20" />
+                )}
+              </div>
+            );
             return (
               <div
                 key={project.title}
@@ -306,20 +322,27 @@ export default function ProjectShowcase({ projects }: { projects: Project[] }) {
                     } as React.CSSProperties
                   }
                 >
-                  <div className="relative w-full shrink-0 aspect-[16/11] overflow-hidden rounded-xl border border-border shadow-[0_24px_70px_-20px_rgba(0,0,0,0.95)]">
-                    {project.image ? (
-                      <Image
-                        src={project.image}
-                        alt={`${project.title} preview`}
-                        fill
-                        loading="eager"
-                        sizes="40vw"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="h-full w-full bg-gradient-to-br from-violet-500/20 via-indigo-500/10 to-cyan-400/20" />
-                    )}
-                  </div>
+                  {/* The stage swallows pointer events so the index keeps
+                      control of the hover; the artwork of whichever project
+                      is showing takes them back so it can be clicked
+                      through to the live site. The hidden ones stay inert
+                      and out of the tab order. */}
+                  {project.link ? (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      tabIndex={isActive ? undefined : -1}
+                      aria-label={`${project.title} — open live site`}
+                      className={`block w-full shrink-0 outline-none ${
+                        isActive ? "pointer-events-auto" : ""
+                      }`}
+                    >
+                      {artwork}
+                    </a>
+                  ) : (
+                    artwork
+                  )}
                 </div>
 
                 <p
@@ -372,16 +395,34 @@ export default function ProjectShowcase({ projects }: { projects: Project[] }) {
                 project.title
               )}
             </h2>
-            {project.image && (
-              <Image
-                src={project.image}
-                alt={`${project.title} preview`}
-                width={800}
-                height={600}
-                sizes="100vw"
-                className="mt-4 aspect-[16/11] w-full rounded-xl border border-border object-cover"
-              />
-            )}
+            {project.image &&
+              (project.link ? (
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${project.title} — open live site`}
+                  className="mt-4 block"
+                >
+                  <Image
+                    src={project.image}
+                    alt={`${project.title} preview`}
+                    width={800}
+                    height={600}
+                    sizes="100vw"
+                    className="aspect-[16/11] w-full rounded-xl border border-border object-cover"
+                  />
+                </a>
+              ) : (
+                <Image
+                  src={project.image}
+                  alt={`${project.title} preview`}
+                  width={800}
+                  height={600}
+                  sizes="100vw"
+                  className="mt-4 aspect-[16/11] w-full rounded-xl border border-border object-cover"
+                />
+              ))}
             <p className="mt-4 text-sm leading-relaxed text-muted">
               {project.description}
             </p>

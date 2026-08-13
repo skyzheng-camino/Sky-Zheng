@@ -27,7 +27,16 @@
    down) and leaves the page mis-scrolled. Nothing on the site uses
    in-page anchor scrolling, so it was purely a liability; if smooth
    scrolling is ever needed, scope it to the interaction (e.g.
-   scrollTo({ behavior: "smooth" })) instead of the root. */
+   scrollTo({ behavior: "smooth" })) instead of the root. Page-wide
+   momentum scrolling is Lenis's job instead (see SmoothScroll.tsx),
+   and it drives the real scroll position rather than this property.
+
+   Lenis ships a lenis.css we deliberately don't import: its first rule
+   forces `height: auto` on <html> and <body>, which out-specifies the
+   `h-full` / `min-h-full` this layout stands on and would let the
+   footer ride up the viewport on short pages. The rest of that file
+   covers setups this site doesn't have — nested scrollers, iframes,
+   and calling lenis.stop(). */
 
 body {
   background: var(--background);

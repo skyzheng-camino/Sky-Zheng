@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import PageTransition from "./components/PageTransition";
 import Footer from "./components/Footer";
 import ScrollProgress from "./components/ScrollProgress";
+import SmoothScroll from "./components/SmoothScroll";
 import StarCursor from "./components/StarCursor";
 import { SITE } from "./lib/data";
 
@@ -56,6 +57,7 @@ export default function RootLayout({
             __html: `try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("is-loading","is-nav-loading")}}catch(e){};try{var n=performance.getEntriesByType("navigation")[0];if(n&&(n.type==="reload"||n.type==="back_forward")){history.scrollRestoration="manual";var y=+sessionStorage.getItem("sz-scroll:"+location.pathname)||0;addEventListener("load",function(){requestAnimationFrame(function(){scrollTo(0,y);requestAnimationFrame(function(){history.scrollRestoration="auto"})})})}addEventListener("pagehide",function(){try{sessionStorage.setItem("sz-scroll:"+location.pathname,String(scrollY))}catch(e){}})}catch(e){}`,
           }}
         />
+        <SmoothScroll />
         <Loader />
         <PageTransition />
         <ScrollProgress />

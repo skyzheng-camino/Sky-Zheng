@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Qwitcher_Grypen } from "next/font/google";
 import "./globals.css";
 import Loader from "./components/Loader";
 import Navbar from "./components/Navbar";
+import PageTransition from "./components/PageTransition";
 import Footer from "./components/Footer";
 import ScrollProgress from "./components/ScrollProgress";
 import StarCursor from "./components/StarCursor";
@@ -56,6 +57,7 @@ export default function RootLayout({
           }}
         />
         <Loader />
+        <PageTransition />
         <ScrollProgress />
         <StarCursor />
         <Navbar />

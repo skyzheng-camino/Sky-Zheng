@@ -46,13 +46,13 @@ than writing from scratch. Otherwise build each file to the spec below.
 These need a browser and a human. Do not attempt to automate them. Prompt the
 user, wait, then continue.
 
-- [ ] **0.1** Get a Gemini API key at `aistudio.google.com/apikey`
+- [x] **0.1** Get a Gemini API key at `aistudio.google.com/apikey`
       (free, no credit card).
-- [ ] **0.2** Create or open a Supabase project. From Project Settings → API,
+- [x] **0.2** Create or open a Supabase project. From Project Settings → API,
       copy the **Project URL** and the **service_role** key (not `anon`).
-- [ ] **0.3** *(Optional)* Get a Resend API key at `resend.com`. Without it the
+- [x] **0.3** *(Optional)* Get a Resend API key at `resend.com`. Without it the
       agent still saves to Supabase; it just won't email.
-- [ ] **0.4** Run `sql/schema.sql` in the Supabase SQL editor
+- [x] **0.4** Run `sql/schema.sql` in the Supabase SQL editor
       (Dashboard → SQL Editor → New query → paste → Run).
 
 **Verify 0.4:** Dashboard → Table Editor shows two new tables, `inquiries` and
@@ -62,11 +62,13 @@ user, wait, then continue.
 
 ## Phase 1 — Scaffold
 
-- [ ] **1.1** Install the one dependency.
+- [x] **1.1** Install the one dependency.
 
-      npm install @supabase/supabase-js
+      pnpm add @supabase/supabase-js
 
-- [ ] **1.2** Create `.env.local` from `.env.example` and populate it with the
+      (Project standardized on pnpm; package-lock.json removed.)
+
+- [x] **1.2** Create `.env.local` from `.env.example` and populate it with the
       values from Phase 0. Generate the salt with `openssl rand -hex 16`.
 
       GEMINI_API_KEY=
@@ -76,7 +78,8 @@ user, wait, then continue.
       NOTIFY_EMAIL=sky.zheng2019@gmail.com
       IP_SALT=
 
-- [ ] **1.3** Confirm `.env*.local` appears in `.gitignore`. Add it if missing.
+- [x] **1.3** Confirm `.env*.local` appears in `.gitignore`. Add it if missing.
+      (Covered by the broader `.env*` rule at `.gitignore:34`.)
 
 **Verify Phase 1:** `git status` shows no `.env.local`. `npm ls @supabase/supabase-js`
 resolves.
@@ -85,7 +88,7 @@ resolves.
 
 ## Phase 2 — Knowledge base
 
-- [ ] **2.1** Create `lib/profile.ts` exporting two named constants:
+- [x] **2.1** Create `lib/profile.ts` exporting two named constants:
       - `PROFILE` — a template string holding Sky's bio, stack, the four
         shipped projects (Camino, SC Analytics Zones backend, SC Analytics
         Zones client app, Jaeli Construction), services offered, and

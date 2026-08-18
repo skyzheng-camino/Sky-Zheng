@@ -183,37 +183,59 @@ Three deviations from the spec, all forced by measurement — see the report:
 
 ## Phase 4 — UI
 
-- [ ] **4.1** Create `components/IntakeAgent.tsx` as a `"use client"` component.
+- [x] **4.1** Create `app/components/IntakeAgent.tsx` as a `"use client"` component.
+      (Path follows this project's convention — components live under `app/`,
+      not a root `components/`.)
       Local state: `messages`, `input`, `busy`, `done`. Seeded with one opener
       message from the agent.
 
-- [ ] **4.2** POST the full message array to `/api/agent` on send. Append the
+- [x] **4.2** POST the full message array to `/api/agent` on send. Append the
       reply. Set `done` when the response says so, and disable the input.
 
-- [ ] **4.3** Include: auto-scroll to newest message, three suggested-prompt
+- [x] **4.3** Include: auto-scroll to newest message, three suggested-prompt
       chips shown only on the empty state, an animated typing indicator while
       `busy`, Enter to send with Shift+Enter for newline, and a 1000-char cap.
 
-- [ ] **4.4** Add a disclosure line under the input stating that messages are
+- [x] **4.4** Add a disclosure line under the input stating that messages are
       processed by Google Gemini and may be used to improve their models. This
       is not optional — the Gemini free tier trains on prompts and this widget
       collects names and emails.
 
-- [ ] **4.5** Match the existing site: dark surface, subtle white borders,
+- [x] **4.5** Match the existing site: dark surface, subtle white borders,
       rounded. Use Tailwind. Keep every style in this one file.
 
-- [ ] **4.6** Accessibility floor: visible `focus-visible` rings on the send
+- [x] **4.6** Accessibility floor: visible `focus-visible` rings on the send
       button and chips, `aria-label` on the typing indicator, responsive down
       to 375px.
 
 **Verify Phase 4:** component renders, a full conversation completes, the input
 disables after submission. Tab through it — focus is visible at every stop.
 
+**Verified 2026-08-18** in Chrome against the dev server. Reworked from the
+spec'd inline panel into a **floating launcher + chat**, per request:
+
+- Panda launcher pinned bottom-right, rebuilt as SVG from
+  `public/Panda Chat Icon.html` (that file draws the face with fixed-pixel
+  divs, which can't scale to a 60px button; the geometry is remapped into a
+  400-unit viewBox so it scales cleanly). Colours and the 5.5s bob are kept.
+- Desktop: card floating above the launcher, gradient-free `bg-card` with a
+  border. Mobile (<640px): full-screen sheet, launcher hidden while open.
+- "Chat with me" bubble is always visible at every width (not hover-only),
+  with the tail from the original artwork.
+- Checked at 320 / 375 / 414px via same-origin iframes — the window itself
+  would not resize under macOS.
+- A full conversation captured Marcus Webb / KC Lawnworks to `inquiries`
+  (automation, 5k_15k, months, fit 95, emailed true) and the composer
+  disabled with "Sent — Sky will follow up.".
+
 ---
 
 ## Phase 5 — Mount and test
 
-- [ ] **5.1** Import `IntakeAgent` into the contact page and render it.
+- [x] **5.1** Import `IntakeAgent` into the contact page and render it.
+      Superseded by request: mounted in `app/layout.tsx` instead, so the
+      launcher appears on every page. Because the layout does not remount
+      between routes, an in-progress conversation survives navigation.
 
 - [ ] **5.2** Run these four conversations end to end:
 

@@ -5,6 +5,7 @@ import Loader from "./components/Loader";
 import Navbar from "./components/Navbar";
 import PageTransition from "./components/PageTransition";
 import Footer from "./components/Footer";
+import IntakeAgent from "./components/IntakeAgent";
 import ScrollProgress from "./components/ScrollProgress";
 import SmoothScroll from "./components/SmoothScroll";
 import StarCursor from "./components/StarCursor";
@@ -65,6 +66,9 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        {/* Fixed-position launcher, so it sits outside the page flow and
+            persists across route changes rather than remounting per page. */}
+        <IntakeAgent />
       </body>
     </html>
   );

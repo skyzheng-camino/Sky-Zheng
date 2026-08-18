@@ -9,15 +9,35 @@ export const maxDuration = 60; // Cold calls to Gemini have been measured near 3
  * Config
  * ------------------------------------------------------------------ */
 
-const MODEL = "gemini-3.6-flash"; // Flash tier = generous free quota. Never a Pro model: 50 req/day.
+/**
+ * Fallback chain, best answer quality first.
+ *
+ * The Gemini free tier caps requests per day *per model*
+ * (`GenerateRequestsPerDayPerProjectPerModel-FreeTier`, measured at 20), so
+ * the chain multiplies the daily ceiling rather than raising it: when one
+ * model returns 429 the next one still has its own untouched allowance.
+ * It also routes around the "experiencing high demand" 503s that 3.x models
+ * have been returning intermittently.
+ *
+ * Every entry is verified to exist for this key — 2.5-flash and
+ * 2.5-flash-lite both 404 now ("no longer available to new users"), so they
+ * are deliberately absent. Flash tier only, never Pro.
+ */
+const MODELS = [
+  "gemini-3.5-flash", // strongest of the reachable free models
+  "gemini-3.1-flash-lite", // the only one that never failed under load
+  "gemini-3.6-flash",
+  "gemini-3.7-flash",
+] as const;
 const MAX_TURNS = 24; // messages, not exchanges
 const MAX_CHARS = 1000; // per message
 const RATE_LIMIT = 30; // requests per IP...
 const RATE_WINDOW_MIN = 60; // ...per this many minutes
-// Per attempt. Two attempts plus backoff must fit inside maxDuration, so this
-// is capped well under it: 25 + 1.2 + 25 = ~51s worst case.
-const MODEL_TIMEOUT_MS = 25_000;
-const RETRY_BACKOFF_MS = 1_200;
+// Per attempt, and for the whole chain. A quota 429 or a 503 comes back in
+// well under a second, so exhausted models are skipped almost for free; the
+// budget only really binds when a model hangs. Both sit under maxDuration.
+const MODEL_TIMEOUT_MS = 20_000;
+const TOTAL_BUDGET_MS = 48_000;
 
 const CONTACT = "sky.zheng2019@gmail.com";
 
@@ -111,10 +131,24 @@ type ModelOutput = {
  * Rate limiting — hashed IP, stored in Supabase. No extra service.
  * ------------------------------------------------------------------ */
 
+/**
+ * Identify the caller for rate limiting.
+ *
+ * Deliberately NOT `x-forwarded-for`'s first entry. A client can send that
+ * header itself; Vercel appends the real address rather than replacing it, so
+ * the first entry is attacker-chosen and rotating it defeats the limit
+ * entirely (verified against this route). Preference order is therefore:
+ * headers Vercel sets and strips from inbound requests first, and only then
+ * the *last* x-forwarded-for entry — the one appended by the closest proxy.
+ */
 function hashIp(req: Request): string {
+  const xff = req.headers.get("x-forwarded-for");
+  const forwarded = xff?.split(",").map((p) => p.trim()).filter(Boolean) ?? [];
+
   const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+    req.headers.get("x-vercel-forwarded-for") ||
     req.headers.get("x-real-ip") ||
+    forwarded[forwarded.length - 1] ||
     "unknown";
   return createHash("sha256")
     .update(ip + (process.env.IP_SALT ?? ""))
@@ -150,26 +184,48 @@ async function underLimit(ipHash: string): Promise<boolean> {
  * ------------------------------------------------------------------ */
 
 async function callModel(messages: Msg[]): Promise<ModelOutput> {
-  // Gemini returns transient 503s often enough to be visible to visitors, and
-  // a cold call has been measured near 30s while warm ones land in ~5s. One
-  // retry covers both. This is not a second extraction pass — the first call
-  // produced nothing. 429 is never retried; that would only deepen the limit.
-  try {
-    return await callModelOnce(messages);
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : "";
-    const retryable = msg === "UPSTREAM_UNAVAILABLE" || /timeout|aborted/i.test(msg);
-    if (!retryable) throw err;
+  const deadline = Date.now() + TOTAL_BUDGET_MS;
+  let lastError: unknown;
 
-    console.warn("[agent] retrying after:", msg);
-    await new Promise((r) => setTimeout(r, RETRY_BACKOFF_MS));
-    return callModelOnce(messages);
+  for (const [index, model] of MODELS.entries()) {
+    const remaining = deadline - Date.now();
+    // Not enough left for a meaningful attempt — stop rather than start one
+    // we'd have to abort mid-flight.
+    if (remaining < 3_000) break;
+
+    try {
+      const out = await callModelOnce(model, messages, Math.min(MODEL_TIMEOUT_MS, remaining));
+      // Running on a fallback means the primary is out of quota or degraded.
+      // Worth surfacing: it is the only signal that the daily cap was hit.
+      if (index > 0) console.error(`[agent] served by fallback model: ${model}`);
+      return out;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      const recoverable =
+        message === "QUOTA_EXHAUSTED" ||
+        message === "UPSTREAM_UNAVAILABLE" ||
+        /timeout|aborted/i.test(message);
+
+      // A 400, a bad key, or a malformed schema will fail identically on every
+      // model. Walking the chain would just burn the budget to reach the same
+      // error, so surface it now.
+      if (!recoverable) throw err;
+
+      console.error(`[agent] ${model}: ${message} — falling through`);
+      lastError = err;
+    }
   }
+
+  throw lastError ?? new Error("No model available");
 }
 
-async function callModelOnce(messages: Msg[]): Promise<ModelOutput> {
+async function callModelOnce(
+  model: string,
+  messages: Msg[],
+  timeoutMs: number
+): Promise<ModelOutput> {
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
     {
       method: "POST",
       headers: {
@@ -192,13 +248,15 @@ async function callModelOnce(messages: Msg[]): Promise<ModelOutput> {
           responseSchema: RESPONSE_SCHEMA,
         },
       }),
-      signal: AbortSignal.timeout(MODEL_TIMEOUT_MS),
+      signal: AbortSignal.timeout(timeoutMs),
     }
   );
 
-  if (res.status === 429) throw new Error("RATE_LIMITED_UPSTREAM");
-  // 500/503 are transient upstream blips; the visitor should be told to retry,
-  // not that something is permanently broken.
+  // The free tier's daily-per-model allowance. Never retried on the same
+  // model — it will not clear until the quota resets — but the next model in
+  // the chain has its own separate allowance.
+  if (res.status === 429) throw new Error("QUOTA_EXHAUSTED");
+  // 500/503 are transient: usually "this model is experiencing high demand".
   if (res.status >= 500) throw new Error("UPSTREAM_UNAVAILABLE");
   if (!res.ok) throw new Error(`Gemini ${res.status}: ${await res.text()}`);
 
@@ -329,7 +387,7 @@ export async function POST(req: Request) {
     console.error("[agent]", message);
 
     const transient =
-      message === "RATE_LIMITED_UPSTREAM" ||
+      message === "QUOTA_EXHAUSTED" ||
       message === "UPSTREAM_UNAVAILABLE" ||
       /timeout|aborted/i.test(message);
 

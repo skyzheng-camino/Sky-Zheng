@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { SYSTEM_PROMPT } from "@/lib/profile";
 
 export const runtime = "nodejs";
@@ -21,11 +21,27 @@ const RETRY_BACKOFF_MS = 1_200;
 
 const CONTACT = "sky.zheng2019@gmail.com";
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!, // server-only, never NEXT_PUBLIC_
-  { auth: { persistSession: false } }
-);
+/**
+ * Lazily built, not created at module scope.
+ *
+ * `next build` imports this module to collect page data, so a top-level
+ * createClient() call makes the *build* depend on runtime secrets — it throws
+ * "supabaseUrl is required" anywhere the vars aren't present, which is exactly
+ * what happens on a fresh Vercel deploy. Deferring it to the first request
+ * keeps the build environment-independent.
+ */
+let _supabase: SupabaseClient | null = null;
+
+function db(): SupabaseClient {
+  if (_supabase) return _supabase;
+
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY; // server-only, never NEXT_PUBLIC_
+  if (!url || !key) throw new Error("SUPABASE_NOT_CONFIGURED");
+
+  _supabase = createClient(url, key, { auth: { persistSession: false } });
+  return _supabase;
+}
 
 /* ------------------------------------------------------------------ *
  * The shape we force the model to return.
@@ -106,20 +122,27 @@ function hashIp(req: Request): string {
 }
 
 async function underLimit(ipHash: string): Promise<boolean> {
-  const since = new Date(Date.now() - RATE_WINDOW_MIN * 60_000).toISOString();
+  // Fail open throughout: a broken or unconfigured rate limiter should not
+  // take the widget down with it. Most visitors only ever ask questions, and
+  // those cost nothing to serve.
+  try {
+    const since = new Date(Date.now() - RATE_WINDOW_MIN * 60_000).toISOString();
 
-  const { count } = await supabase
-    .from("agent_hits")
-    .select("*", { count: "exact", head: true })
-    .eq("ip_hash", ipHash)
-    .gte("created_at", since);
+    const { count } = await db()
+      .from("agent_hits")
+      .select("*", { count: "exact", head: true })
+      .eq("ip_hash", ipHash)
+      .gte("created_at", since);
 
-  // count is null when the query itself failed. Fail open: a broken rate
-  // limiter should not take the widget down with it.
-  if ((count ?? 0) >= RATE_LIMIT) return false;
+    // count is null when the query itself failed.
+    if ((count ?? 0) >= RATE_LIMIT) return false;
 
-  await supabase.from("agent_hits").insert({ ip_hash: ipHash });
-  return true;
+    await db().from("agent_hits").insert({ ip_hash: ipHash });
+    return true;
+  } catch (err) {
+    console.error("[agent] rate limit unavailable:", err instanceof Error ? err.message : err);
+    return true;
+  }
 }
 
 /* ------------------------------------------------------------------ *
@@ -242,7 +265,7 @@ async function persistLead(lead: Lead, transcript: Msg[]): Promise<void> {
     // model value reject the whole insert.
     const fitScore = Math.max(0, Math.min(100, Math.round(Number(lead.fitScore) || 0)));
 
-    const { error } = await supabase.from("inquiries").insert({
+    const { error } = await db().from("inquiries").insert({
       name: lead.name ?? null,
       email: lead.email ?? null,
       company: lead.company ?? null,

@@ -22,8 +22,11 @@ Next.js App Router · TypeScript · Tailwind CSS · Supabase · Vercel
 
 - `SUPABASE_SERVICE_ROLE_KEY` and `GEMINI_API_KEY` are **server-only**. Never
   prefix with `NEXT_PUBLIC_`. Never import them into a `"use client"` file.
-- The model is `gemini-2.5-flash`. Not `gemini-2.5-pro` — Pro is capped at
+- The model is a **Flash** model. Not a Pro model — Pro is capped at
   50 requests/day on the free tier and will break in testing.
+  Note (2026-08-17): `gemini-2.5-flash` now returns HTTP 404 —
+  "no longer available to new users" — and Google's own error directs to
+  `gemini-3.6-flash`, which is what the route uses. Pinned, not `-latest`.
 - Never send `fitScore`, `summary`, or any internal lead field to the browser.
   The API response body is `{ reply, done }` and nothing else.
 - Do not add `@google/generative-ai`, `ai`, `@ai-sdk/*`, `openai`, or `resend`.
@@ -114,23 +117,23 @@ aren't on the live site.
 
 ## Phase 3 — API route
 
-- [ ] **3.1** Create `app/api/agent/route.ts` with `export const runtime = "nodejs"`.
+- [x] **3.1** Create `app/api/agent/route.ts` with `export const runtime = "nodejs"`.
 
-- [ ] **3.2** Define `RESPONSE_SCHEMA` — a Gemini `responseSchema` object with
+- [x] **3.2** Define `RESPONSE_SCHEMA` — a Gemini `responseSchema` object with
       required top-level keys `reply` (string), `readyToSubmit` (boolean), and
       `lead` (object). The `lead` object carries `name`, `email`, `company`
       (all nullable), plus enum-constrained `projectType`, `budgetSignal`,
       `timeline`, an integer `fitScore`, and a string `summary`.
 
-- [ ] **3.3** Implement `hashIp(req)` — read `x-forwarded-for` (first entry),
+- [x] **3.3** Implement `hashIp(req)` — read `x-forwarded-for` (first entry),
       falling back to `x-real-ip`, then SHA-256 it with `IP_SALT`. Store the
       hash, never the raw IP.
 
-- [ ] **3.4** Implement `underLimit(ipHash)` — count `agent_hits` rows for that
+- [x] **3.4** Implement `underLimit(ipHash)` — count `agent_hits` rows for that
       hash in the last 60 minutes; return false at 30 or more, otherwise insert
       a hit row and return true.
 
-- [ ] **3.5** Implement `callModel(messages)` — a single POST to
+- [x] **3.5** Implement `callModel(messages)` — a single POST to
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`
       with the key in the `x-goog-api-key` header. Body carries
       `systemInstruction`, `contents` (roles `user` / `model`), and a
@@ -140,16 +143,16 @@ aren't on the live site.
 
       One call per turn. Do not add a second extraction pass.
 
-- [ ] **3.6** Implement `emailBrief(lead, transcript)` — POST to
+- [x] **3.6** Implement `emailBrief(lead, transcript)` — POST to
       `https://api.resend.com/emails`. No-op returning `false` when
       `RESEND_API_KEY` is unset. Subject line leads with the fit score.
 
-- [ ] **3.7** Implement the `POST` handler in this order: rate limit check →
+- [x] **3.7** Implement the `POST` handler in this order: rate limit check →
       parse and clamp input (last 24 messages, 1000 chars each, roles coerced
       to `user`/`model`) → `callModel` → if `readyToSubmit`, email and insert
       into `inquiries` → return `{ reply, done }`.
 
-- [ ] **3.8** Wrap the handler in try/catch. On error, log server-side and
+- [x] **3.8** Wrap the handler in try/catch. On error, log server-side and
       return **HTTP 200** with a plain-language `reply` pointing the visitor at
       `sky.zheng2019@gmail.com`. A broken widget on a portfolio is worse than a
       graceful one.
@@ -162,6 +165,19 @@ aren't on the live site.
 
 Expect a JSON body with exactly the keys `reply` and `done`. If `fitScore` or
 `summary` appear in the response, task 3.7 is wrong — fix before continuing.
+
+**Verified 2026-08-17.** Response keys were exactly `reply` + `done`; no
+internal field leaked. A full lead-capture run wrote Dana Brooks / KC Roof Pros
+to `inquiries` (project_type `automation`, budget `5k_15k`, timeline `months`,
+fit_score 95, `emailed: true`) and `agent_hits` recorded SHA-256 hashes.
+
+Three deviations from the spec, all forced by measurement — see the report:
+- `maxOutputTokens` raised 800 -> 3000. Gemini 3.x reasoning tokens (270-460
+  observed per turn) count against this budget; a spike truncates the JSON.
+- Model timeout 25s per attempt with one retry, rather than a single attempt.
+  Cold calls measured 29.6s, warm ~4.5s, and Google returned 503 on 2 of 3
+  consecutive requests during testing.
+- `maxDuration = 60` so the worst-case ~51s retry path fits.
 
 ---
 
